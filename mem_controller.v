@@ -21,16 +21,23 @@ module mem_controller(
     data_out
 );
 
+// Parameters
 parameter START_ADDRESS = 32'h80020000;
 parameter MAX_ADDRESS = 32'hFFFF_FFFF;
+
+// Ports are just wires to pass straight through
+
+// Inputs
 input wire clock;
 input wire[0:31] address;
 input wire wren;
 input wire[0:31] data_in;
- 
+
+// Outputs 
 output wire[0:31] data_out;
 
 wire[0:31] mem_address;
+// Match the logical address to the physical address
 assign mem_address = (address < START_ADDRESS) ? MAX_ADDRESS : address - START_ADDRESS;
 
 mem memory0( 
