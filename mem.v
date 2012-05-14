@@ -1,10 +1,12 @@
 //
-// Memory implementation
+// mem.v
+// 
+// Single port memory. Supports reads and writes.
 // 
 // Write: wren = '1' 
 // Read: wren = '0'
 //
-// Big Endian
+// Big endian
 //
 
 module mem(
