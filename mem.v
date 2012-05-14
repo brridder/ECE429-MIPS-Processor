@@ -20,19 +20,19 @@ module mem(
 parameter MEM_DEPTH=1048578; // 1 MB of memory
 parameter MEM_WIDTH=8; // 8 bit = 1 byte
 
-input clock;
-input[0:31] address;
-input wren;
-input[0:31] data_in;
+input wire clock;
+input wire[0:31] address;
+input wire wren;
+input wire[0:31] data_in;
 
-wire[0:31] data_in;
-wire clock;
-wire wren;
-wire[0:31] address;
+//wire[0:31] data_in;
+//wire clock;
+//wire wren;
+//wire[0:31] address;
 
-output[0:31] data_out;
+output reg[0:31] data_out;
 
-reg[0:31] data_out;
+//reg[0:31] data_out;
 
 
 reg[0:MEM_WIDTH-1] ram[0:MEM_DEPTH-1];
