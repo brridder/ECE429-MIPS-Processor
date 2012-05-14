@@ -25,21 +25,12 @@ input wire[0:31] address;
 input wire wren;
 input wire[0:31] data_in;
 
-//wire[0:31] data_in;
-//wire clock;
-//wire wren;
-//wire[0:31] address;
-
 output reg[0:31] data_out;
-
-//reg[0:31] data_out;
-
 
 reg[0:MEM_WIDTH-1] ram[0:MEM_DEPTH-1];
 integer i;
 
 wire[0:31] data;
-//assign data_out = data;
 
 initial 
 begin
@@ -52,10 +43,9 @@ end
 assign data = !wren ? {ram[address], ram[address+1], 
                        ram[address+2], ram[address+3]} : 32'h0000_0000;
 
-// rising edge = posedge 
 always @(posedge clock)
 begin 
-    if ((address != 0) && (address < MEM_DEPTH)) begin
+    if (address < MEM_DEPTH) begin
         if (wren == 1'b1) begin
             fork
             ram[address] <= data_in[0:7];         
@@ -67,7 +57,6 @@ begin
     end
 end
 
-// falling edge = negedge
 always @(negedge clock)
 begin
     if (address < MEM_DEPTH) begin

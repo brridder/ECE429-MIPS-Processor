@@ -8,7 +8,7 @@ module mem_tb;
    // Instantiate mem DUT
    mem DUT(clock, address, wren, data, data_out);
 
-   // Executes only onece during the initialization
+   // Executes only once during the initialization
    initial begin
 	clock = 0;
 	wren = 0;
@@ -29,7 +29,7 @@ module mem_tb;
       // print header to stdout
       $display("\t\ttime,\tclock,\twren,\taddress,\tdata,\tdata_out");
       // prints signal values when they change
-      $monitor("%d,\t%b,\t%b,\t%d,\t%d,\t%d", $time, clock, wren, address, data, data_out);
+      $monitor("%d,\t%b,\t%b,\t%h,\t%h,\t%h", $time, clock, wren, address, data, data_out);
    end
 
    // Specify when to stop the simulation
@@ -51,8 +51,8 @@ module mem_tb;
       wren = 1'b0;
       @ (posedge clock);
       if (data_out != 32'h55cc_55cc) begin
-	 $display("Mem error at time %d", $time);
-	 $display("Expected value 55cc55cc, actual value %d", data_out);
+          $display("Mem error at time %d", $time);
+          $display("Expected value 55cc55cc, actual value %h", data_out);
 	 $display("Address %d", address);
 	 #5 -> terminate_sim;
       end
@@ -86,7 +86,7 @@ module mem_tb;
 	 #5 -> terminate_sim;
       end
 
-      // 3. Load and validate data out of memoty bounds
+      // 3. Load and validate data out of memory bounds
       @ (posedge clock);
       wren = 1'b1;
       address = 32'hffff_ffff;		
