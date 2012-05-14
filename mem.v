@@ -19,10 +19,13 @@ input q;
 inout[31:0] data;
 
 reg[MEM_WIDTH-1:0] ram[0:MEM_DEPTH-1];
+integer i;
 
 initial 
 begin
-
+    for (i = 0; i < MEM_DEPTH; i = i+1) begin
+        ram[i] = 0;
+    end
 end
 
 always @(posedge clock)
