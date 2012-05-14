@@ -60,19 +60,19 @@ begin
             ram[address+1] <= data_in[7:15];         
             ram[address+2] <= data_in[16:23];         
             ram[address+3] <= data_in[24:31];         
+            data <= 32'hFFFF_FFFF;
             join
+        end else begin // READ
+            data = {ram[address], ram[address+1], ram[address+2], ram[address+3]};
         end
-    end 
+    end else begin
+        data <= 32'hFFFF_FFFF;
+    end
 end
 
 // falling edge = negedge
 always @(negedge clock)
 begin
-    if ((address != 0) && (address < MEM_DEPTH)) begin
-        data_out = 32'h0000_0000;
-        if (wren == 1'b0) begin 
-            data = {ram[address], ram[address+1], ram[address+2], ram[address+3]};
-        end
-    end
+    data_out = data;
 end
 endmodule
