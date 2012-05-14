@@ -38,7 +38,7 @@ output reg[0:31] data_out;
 reg[0:MEM_WIDTH-1] ram[0:MEM_DEPTH-1];
 integer i;
 
-reg[0:31] data;
+wire[0:31] data;
 //assign data_out = data;
 
 initial 
@@ -49,6 +49,8 @@ begin
     end
 end
 
+assign data = !wren ? {ram[address], ram[address+1], 
+                       ram[address+2], ram[address+3]} : 32'h0000_0000;
 
 // rising edge = posedge 
 always @(posedge clock)
@@ -60,19 +62,18 @@ begin
             ram[address+1] <= data_in[7:15];         
             ram[address+2] <= data_in[16:23];         
             ram[address+3] <= data_in[24:31];         
-            data <= 32'hFFFF_FFFF;
             join
-        end else begin // READ
-            data = {ram[address], ram[address+1], ram[address+2], ram[address+3]};
         end
-    end else begin
-        data <= 32'hFFFF_FFFF;
     end
 end
 
 // falling edge = negedge
 always @(negedge clock)
 begin
-    data_out = data;
+    if (address < MEM_DEPTH) begin
+        data_out = data;
+    end else begin
+        data_out = 32'h0000_0000;
+    end
 end
 endmodule

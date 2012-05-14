@@ -8,6 +8,9 @@
 //
 // In the future, it will be able to load half words from memory appropriately
 //
+// Consequently, if we don't need to be able to load half words, then this
+// could be compacted into the mem.v
+//
 
 
 module mem_controller(
@@ -37,16 +40,5 @@ mem memory0(
     .data_in (data_in),
     .data_out (data_out)
     );
-
-/*
-always @(posedge clock)
-begin
-    if (address < START_ADDRESS) begin
-        mem_address = MAX_ADDRESS;
-    end else begin
-        mem_address = address - START_ADDRESS;
-    end
-end
-*/
 
 endmodule

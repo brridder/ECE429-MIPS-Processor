@@ -50,6 +50,12 @@ begin
     @(posedge clock);
     address = 32'h0000_0016; // Read the memory location minus the start loc
     @(posedge clock);
+    address = 32'hFFFF_FFFF;
+    wren = 1'b1;
+    data_in = 32'haaaa_aaaa;
+    @(posedge clock);
+    wren = 1'b0;
+    @(posedge clock);
 end
 
 initial
