@@ -1,6 +1,15 @@
-*
 *~
 *.lock
+modelsim.ini
+work
+work/*
+transcript
+*.vcd
+modelsim.ini.bk
+*.vstf
 
 !*.v
 !.gitignore
+!scripts
+!vlog
+!

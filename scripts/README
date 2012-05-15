@@ -1,0 +1,13 @@
+To use the scripts found here to use ModelSim under wine:
+1. Each file, modify the variable "MODELSIM_DIR" to the location of modelsim 
+2. Copy each file to /usr/local/bin (or where ever your path is)
+
+To compile verilog files: "vlog *.v"
+To simulate under command line: "vsim -c TopLevelModule"
+    - in the Interactive prompt: "run XXXns"
+    - TopLevelModule is the top level module as given from the output of the
+      vlog
+
+To initialize your working directory: "vlib work"
+
+DONE BAM
