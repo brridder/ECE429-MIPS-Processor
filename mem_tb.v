@@ -55,6 +55,8 @@ module mem_tb;
             $display("Expected value 55cc55cc, actual value %h", data_out);
             $display("Address %d", address);
             #5 -> terminate_sim;
+        end else begin
+            $display("Store at the start of mem block - OK");
         end
 
         @ (posedge clock);
@@ -69,6 +71,8 @@ module mem_tb;
             $display("Expected value 12345678, actual value %d", data_out);
             $display("Address %d", address);
             #5 -> terminate_sim;
+        end else begin
+            $display("Store at the end of mem block - OK");
         end
 
         // 2. Load and validate data somewhere in the middle of memory
@@ -84,13 +88,15 @@ module mem_tb;
             $display("Expected value fedcba98, actual value %d", data_out);
             $display("Address %d", address);
             #5 -> terminate_sim;
+        end else begin
+            $display("Store in the middle of mem block - OK");
         end
 
-        // 3. Load and validate data out of memory bounds
+        // 3. Load and validate data just out of memory bounds
         @ (posedge clock);
         wren = 1'b1;
-        address = 32'hffff_ffff;        
-        data = 32'h5678_9abc;
+        address = 32'h0010_0000;
+        data = 32'h0000_0000;
         @ (posedge clock);
         wren = 1'b0;
         @ (posedge clock);
@@ -99,6 +105,25 @@ module mem_tb;
             $display("Expected value 00000000, actual value %d", data_out);
             $display("Address %d (out of bounds)", address);
             #5 -> terminate_sim;
+        end else begin
+            $display("Test store just out of mem bounds - OK");
+        end
+        
+        // 4. Load and validate data far out of memory bounds
+        @ (posedge clock);
+        wren = 1'b1;
+        address = 32'hffff_ffff;        
+        data = 32'hb00d_ecaf;
+        @ (posedge clock);
+        wren = 1'b0;
+        @ (posedge clock);
+        if (data_out != 32'h0000_0000) begin
+            $display("Mem error at time %d", $time);
+            $display("Expected value 00000000, actual value %d", data_out);
+            $display("Address %d (out of bounds)", address);
+            #5 -> terminate_sim;
+        end else begin
+            $display("Test store far out of mem bounds - OK");
         end
       
         -> terminate_sim;
