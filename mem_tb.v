@@ -1,15 +1,19 @@
+// 
+// mem_tb.v
+//
 // Memory test bench
+//
 
 module mem_tb;
     reg clock, wren;
-    reg [0:31] address, data;
-    wire [0:31] data_out;
+    reg[0:31]   address, data;
+    wire[0:31]  data_out;
 
     // Instantiate mem DUT
     mem DUT(clock, address, wren, data, data_out);
 
     // Executes only once during the initialization
-    initial begin
+    initial begin 
         clock = 0;
         wren = 0;
         address = 0;
@@ -19,12 +23,14 @@ module mem_tb;
     // Clock generation
     always
         #5 clock = !clock;
+    
 
     // Setup for simulation
     initial begin
         $dumpfile("mem.vcd");   // waveform
         $dumpvars;              // dump all the signals
     end
+
     initial begin
         // print header to stdout
         $display("\t\ttime,\tclock,\twren,\taddress,\tdata,\tdata_out");
@@ -38,7 +44,6 @@ module mem_tb;
         @ (terminate_sim);
         #10 $finish;
     end
-   
 
     // TEST CASES BEGIN HERE
     initial begin
@@ -125,9 +130,6 @@ module mem_tb;
         end else begin
             $display("Test store far out of mem bounds - OK");
         end
-      
         -> terminate_sim;
-      
     end   
-    
 endmodule   
