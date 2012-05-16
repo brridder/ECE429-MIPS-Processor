@@ -1,0 +1,17 @@
+#! /opt/local/bin/python2
+
+import os
+import sys
+
+MODELSIM_DIR = r"/Users/stephan/.wine/drive_c/Modeltech_pe_edu_10.1b/win32pe_edu/"
+
+VLOG = "vlib.exe"
+
+cmd_str = MODELSIM_DIR + VLOG
+
+if (len(sys.argv) == 1):
+    print "Derp"
+else:
+    for s in sys.argv[1:]:
+        cmd_str += " " + s
+os.system("wine " + cmd_str)
