@@ -29,17 +29,16 @@ module srec_parser_tb();
    integer     byte_count;
    integer     read_word;
    
-   
 
    assign address = srec_done ? tb_address : srec_address;
    assign wren = srec_done ? tb_wren : srec_wren;
    assign tb_data_out = data_out;
 
-
+   
    
    assign data_in = srec_done ? tb_data_in : srec_data_in;
     
-   srec_parser U0(
+   srec_parser #("srec_files/BubbleSort.srec") U0(
 		  .clock (clock),
 		  .mem_address (srec_address),
 	          .mem_wren (srec_wren),
@@ -69,7 +68,6 @@ module srec_parser_tb();
 
    initial begin
       @(posedge srec_done);
-       $display("Reading srec: \n");
       @(posedge clock);
 
       byte_count = bytes_read;

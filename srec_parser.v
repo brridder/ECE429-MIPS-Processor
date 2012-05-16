@@ -47,27 +47,23 @@ module srec_parser(
       bytes_read = 0;
       
       file = $fopen(SREC_FILE_NAME, "r");
-      $display("opened file \n");
+      $display("opened file %s\n", SREC_FILE_NAME);
       length = 1;
       while (length != 0) begin
 	 length = $fgets(srec_line, file);
 	 $sscanf(srec_line, "%c%c", first_character, second_character);
 	 
 	 if (second_character == "3") begin
-	    $display("line: %s of length %d\n", srec_line, length);
 	    $sscanf(srec_line, "S3%2X%8X%s", data_length, address, data);
-	    $display("data_length: %d Address: %8X Data: %s", data_length, address, data);
 	    offset = 2*8*(data_length - 4) -64;
 	    address = address - 4;
 
 	    @(posedge clock);
-	    
-	    
+	    	    
 	    while (offset >= 16) begin
 	       address = address + 4;
 	       bytes_read = bytes_read + 4;
 	       $sscanf(data[offset+:64], "%8X", data_word);
-	       $display("byte: %8X\n", data_word);
 	       offset = offset - 64;
 	       @(posedge clock);
 	       mem_address = address;
