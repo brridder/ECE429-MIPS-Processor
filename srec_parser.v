@@ -13,7 +13,7 @@ module srec_parser(
 );
 
 
-   parameter SREC_FILE_NAME = "test.srec";
+   parameter SREC_FILE_NAME = "test2.srec";
    
    input wire clock;
    output reg [0:31] mem_address;
