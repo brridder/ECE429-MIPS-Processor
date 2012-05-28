@@ -90,6 +90,96 @@ module decode_tb;
        //SUBU
         insn = 32'b10001100000000100001100001000000;
        @ (posedge clock);
+
+       //SLT
+        insn = 32'b10101000000000100001100001000000;
+       @ (posedge clock);
+
+       //SLTU
+        insn = 32'b10101100000000100001100001000000;
+       @ (posedge clock);
+
+        //SLL
+        insn = 32'b00000000000000100001100001000000;
+       @ (posedge clock);
+
+        //SRL
+        insn = 32'b00001000000000100001100001000000;
+       @ (posedge clock);
+
+       //SRA
+        insn = 32'b00001100000000100001100001000000;
+       @ (posedge clock);
+
+        //AND
+        insn = 32'b10010000000000100001100001000000;
+       @ (posedge clock);
+
+       //OR
+        insn = 32'b10010100000000100001100001000000;
+       @ (posedge clock);
+
+        //XOR
+        insn = 32'b10011000000000100001100001000000;
+       @ (posedge clock);
+
+       //NOR
+        insn = 32'b10011100000000100001100001000000;
+       @ (posedge clock);
+
+       //ADDIU
+        insn = 32'b00100100000000100001100001001001;
+       @ (posedge clock);
+
+       //SLTI
+        insn = 32'b00100100000000100001100001001010;
+       @ (posedge clock);
+
+       //LW
+        insn = 32'b00100100000000100001100001100011;
+       @ (posedge clock);
+
+        //SW
+        insn = 32'b00100100000000100001100001101011;
+       @ (posedge clock);
+
+        //LUI
+        insn = 32'b00100100000000100001100001001111;
+       @ (posedge clock);
+
+        //ORI
+        insn = 32'b00100100000000100001100001001101;
+       @ (posedge clock);
+
+        //J
+        insn = 32'b00100100000000100001100001000010;
+       @ (posedge clock);
+
+        //BEQ
+        insn = 32'b00100100000000100001100001000100;
+       @ (posedge clock);
+
+       //BNE
+        insn = 32'b00100100000000100001100001000101;
+       @ (posedge clock);
+
+       //BGTZ
+        insn = 32'b00100100000000100001100001000111;
+       @ (posedge clock);
+
+       //BLEZ
+        insn = 32'b00100100000000100001100001000110;
+       @ (posedge clock);
+
+       //BLTZ
+        insn = 32'b00100100000000100000000001000001;
+       @ (posedge clock);
+
+       //BGEZ
+        insn = 32'b00100100000000100000100001000001;
+       @ (posedge clock);
+
+       
        
         // wait fot the result
        // @ (posedge clock);
