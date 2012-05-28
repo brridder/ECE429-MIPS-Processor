@@ -43,13 +43,14 @@ module decode (
     always @(posedge clock)
     begin
         opcode <= insn[26:31];
-        $display("Got opcode %d", insn[26:31]);
+        // DEBUG
+        $display("Got opcode (decode.v) %d", insn[26:31]);
         
         case(insn[26:31])
             6'b000000:	// ADD
-              insn_type <= R_TYPE;
+                insn_type <= R_TYPE;
             default:
-              insn_type <= INVALID_INS;
+                insn_type <= INVALID_INS;
     
         endcase // case (insn[26:31])
         
@@ -58,12 +59,24 @@ module decode (
    // Decode the rest of the fields based on the type of instruction
    always @(insn_type)
    begin
-       case(insn_type)
-           R_TYPE:
-             rs <= insn[21:25];
-             
-       endcase // case (insn_type)
-       
+       if (insn_type == R_TYPE)
+       begin
+           rs <= insn[21:25];
+           rt <= insn[16:20];
+           rd <= insn[11:15];
+           shift_amount <= insn[6:10];
+           funct <= insn[0:5];
+       end
+       else if (insn_type == I_TYPE)
+       begin
+           rs <= insn[21:25];
+           rt <= insn[16:20];
+           immediate <= insn[0:15];
+       end
+       else if (insn_type == J_TYPE)
+       begin
+           j_address <= insn[0:25];
+       end
    end
 
 endmodule

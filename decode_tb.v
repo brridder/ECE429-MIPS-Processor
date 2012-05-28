@@ -54,14 +54,22 @@ module decode_tb;
         //
         // ADD instruction testcase
         @ (posedge clock);
-        //          | fu || sh|| rd|| rt|| rs|| op |
-        insn = 32'b11111111011001001000101010000000;
-        $display("inst type is %d", insn_type);
+        //         | fu || sh|| rd|| rt|| rs|| op |
+        insn = 32'b11111111011001001100101010000000;
+        $display("inst type is (clk 1) %d", insn_type);
+        $display("rs is (clk1) %d", rs);
         @ (posedge clock);
+        // wait fot the result
         @ (posedge clock);
-        $display("inst type is %d", insn_type );
+        // TODO add automatic checking of the fields here
+        $display("inst type is (clk 3) %d", insn_type );
+        $display("rs is (clk3) %d", rs);
+        $display("rt is (clk3) %d", rt);
+        $display("rd is (clk3) %d", rd);
+        $display("sh is (clk3) %d", shift_amount);
+        $display("fu is (clk3) %d", funct);
 
-
+        
         //
         // signal to end the simulation
         -> terminate_sim;
