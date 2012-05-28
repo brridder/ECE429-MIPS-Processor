@@ -5,15 +5,17 @@
 
 module decode (
     clock,
-    insn
+    insn,
+    insn_valid
 );
 
     input wire[0:31] insn;
-    input wire clock; 
+    input wire clock;
+    input wire insn_valid;
     reg[0:1] insn_type;
     
     
-    wire[5:0] opcode;
+    wire[0:5] opcode;
     wire[4:0] rs;
     wire[4:0] rt;
     wire[4:0] rd;
@@ -31,27 +33,28 @@ module decode (
     parameter INVALID_INS = 3;
 
 
-    assign opcode = insn[26:31];
-    assign rs = insn[21:25];
-    assign base = insn[21:25];
-    assign rt = insn[16:20];
-    assign rd = insn[11:15];
-    assign shift_amount = insn[6:10];
-    assign funct = insn[0:5];
-    assign immediate = insn[0:15];
-    assign offset = insn[0:15];
-    assign j_address = insn[0:25];
+    assign opcode = insn[0:5];
+    assign rs = insn[6:10];
+    assign base = insn[6:10];
+    assign rt = insn[11:15];
+    assign rd = insn[16:20];
+    assign shift_amount = insn[20:25];
+    assign funct = insn[26:31];
+    assign immediate = insn[16:31];
+    assign offset = insn[16:31];
+    assign j_address = insn[6:31];
    
 
     // Is this the correct way of doing it?
 
     // Decode the opcode and type of instruction on the rising edge of the clock
     always @(posedge clock)
-    begin
+      begin
+	 if(insn_valid) begin
         //opcode <= insn[26:31];
         // DEBUG
-        $display("Got opcode (decode.v) %d", insn[26:31]);
-        
+       // $display("Got instr (decode.v) %b", insn);
+         $display("Got opcode (decode.v) %b", opcode);
         case(opcode)
 	  // R-TYPE
             6'b000000: begin	
@@ -115,7 +118,7 @@ module decode (
 	     $display("BLEZ rs: %d offset: %d", rs, offset);
 
 	   6'b000001: //REGIMM instructions
-	     begin
+	begin
 		case(rt)
 		   5'b00000:	//BLTZ
 		     $display("BLTZ rs: %d offset: %d", rs, offset);
@@ -123,9 +126,8 @@ module decode (
 		     $display("BGEZ rs: %d offset: %d", rs, offset);
 		  default:
 		    $display("REGIMM not implemented");
-		endcase; // case (rt)
-		
-	     end
+		endcase // case (rt)
+	end
 	  
 
 	  
@@ -136,8 +138,10 @@ module decode (
     
         endcase // case (insn[26:31])
         
-    end
-
+	 end // if (insn_valid = 1'b1)
+	 
+    end // always @ (posedge clock)
+   
    // Decode the rest of the fields based on the type of instruction
 
 

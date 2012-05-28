@@ -6,6 +6,7 @@
 
 module decode_tb;
     reg clock;
+   reg 	i_valid;
     reg[0:31] insn;
 
     wire[0:1]  insn_type;
@@ -23,7 +24,8 @@ module decode_tb;
    
     decode DUT(
         .clock (clock),
-        .insn (insn)
+        .insn (insn),
+	.insn_valid (i_valid)
     );
 
     function check_r_type;
@@ -75,6 +77,8 @@ module decode_tb;
         //         | fu || sh|| rd|| rt|| rs|| op |
         // 100000 | 00000 |00010| 00011 | 00001  | 000000|
 
+       i_valid = 1'b1;
+       
        //ADD
        insn = 32'b10000000000000100001100001000000;
         @ (posedge clock);
@@ -128,7 +132,10 @@ module decode_tb;
        @ (posedge clock);
 
        //ADDIU
-        insn = 32'b00100100000000100001100001001001;
+                // 001001 11101111011111111111101000
+          insn = 32'b00100111101111011111111111101000;
+       
+        //insn = 32'b00100100000000100001100001001001;
        @ (posedge clock);
 
        //SLTI

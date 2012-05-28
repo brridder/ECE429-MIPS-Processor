@@ -37,7 +37,9 @@ module fetch_tb;
     wire[0:31] bytes_read;
     integer    byte_count;
     integer    read_word;
-    integer    fetch_word;
+    reg[0:31]    fetch_word;
+
+    reg instruction_valid;
 
     mem_controller mcu(
         .clock (clock), 
@@ -66,8 +68,13 @@ module fetch_tb;
         .done (srec_done),
         .bytes_read(bytes_read)
     );
+
+    decode U1(
+        .clock (clock),
+        .insn (fetch_word),
+	.insn_valid (instruction_valid)
+    );
    
-    // Probably a better way to do this.
     assign address = srec_done ? (fetch_stall ? tb_address : fetch_address) : srec_address;
     assign wren = srec_done ? (fetch_stall ? tb_wren : fetch_wren) : srec_wren;
     assign tb_data_out = data_out;
@@ -77,6 +84,7 @@ module fetch_tb;
     initial begin
         clock = 1;
         fetch_stall = 1;
+        instruction_valid = 1'b0;
     end
 
     always begin
@@ -96,6 +104,7 @@ module fetch_tb;
         tb_wren = 1'b0;
         while (byte_count > 0) begin
             @(posedge clock);
+	        instruction_valid = 1'b0;
 	        read_word = tb_data_out;
 	 
             fetch_stall = 0;   
@@ -110,7 +119,11 @@ module fetch_tb;
                                 fetch_address, read_word, fetch_word, data_out);
 
             end    
-            $display("a: %b, ", fetch_word[31:26] );
+            //$display("a: %b, ", fetch_word[31:26] );
+	   $display("PC: %X, Instruction: %b", fetch_address, fetch_word);
+	   instruction_valid = 1'b1;
+	   
+	   
 	        tb_address = tb_address + 4;
 	        byte_count = byte_count - 4; // 27 = 0010 011
         end
