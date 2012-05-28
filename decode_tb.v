@@ -23,16 +23,7 @@ module decode_tb;
    
     decode DUT(
         .clock (clock),
-        .insn (insn),
-        .insn_type (insn_type),
-        .opcode (opcode),
-        .rs (rs),
-        .rt (rt),
-        .rd (rd),
-        .shift_amount (shift_amount),
-        .funct (funct),
-        .immediate (immediate),
-        .j_address (j_address)
+        .insn (insn)
     );
 
     function check_r_type;
@@ -82,32 +73,28 @@ module decode_tb;
         @ (posedge clock);
         test_count = test_count + 1;
         //         | fu || sh|| rd|| rt|| rs|| op |
-        insn = 32'b11111111011001001100101010000000;
-        $display("inst type is (clk 1) %d", insn_type);
-        $display("rs is (clk1) %d", rs);
-        @ (posedge clock);
-        // wait fot the result
-        @ (posedge clock);
-        // check the result
-        if (check_r_type(rs, 5'b01010,
-                         rt, 5'b11001,
-                         rd, 5'b00100,
-                         shift_amount, 5'b11011,
-                         funct, 6'b111111) == 0)
-        begin
-            failed_count = failed_count + 1;
-            $display("ADD test failed");
-        end
-        
-        $display("inst type is (clk 3) %d", insn_type );
-        $display("rs is (clk3) %d", rs);
-        $display("rt is (clk3) %d", rt);
-        $display("rd is (clk3) %d", rd);
-        $display("sh is (clk3) %d", shift_amount);
-        $display("fu is (clk3) %d", funct);
+        // 100000 | 00000 |00010| 00011 | 00001  | 000000|
 
-        $display("Tests ran:    %d", test_count);
-        $display("Tests failed  %d", failed_count);
+       //ADD
+       insn = 32'b10000000000000100001100001000000;
+        @ (posedge clock);
+
+       //ADDU
+        insn = 32'b10000100000000100001100001000000;
+       @ (posedge clock);
+
+       //SUB
+        insn = 32'b10001000000000100001100001000000;
+       @ (posedge clock);
+
+       //SUBU
+        insn = 32'b10001100000000100001100001000000;
+       @ (posedge clock);
+       
+        // wait fot the result
+       // @ (posedge clock);
+        // check the result
+     
         
         //
         // signal to end the simulation
