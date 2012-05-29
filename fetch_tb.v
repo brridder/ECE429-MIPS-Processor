@@ -59,7 +59,7 @@ module fetch_tb;
         .stall (fetch_stall)
     );
     
-    srec_parser #("srec_files/SimpleIf.srec") U0(
+    srec_parser #("srec_files/SumArray.srec") U0(
         .clock (clock),
         .mem_address (srec_address),
         .mem_wren (srec_wren),
@@ -130,6 +130,7 @@ module fetch_tb;
             byte_count = byte_count - 4; // 27 = 0010 011
         end
         instruction_valid = 1'b0;
+        ->terminate_sim;
     end
 
 endmodule

@@ -1,0 +1,163 @@
+# PC: 80020000, Instruction: 00100111101111011111111111001000
+# I-Type instruction.
+# ADDIU rs: 29 rt: 29 immediate: 65480
+#
+# PC: 80020004, Instruction: 10101111101111100000000000110100
+# I-Type instruction.
+# SW base: 29 rt: 30 offset:    52
+#
+# PC: 80020008, Instruction: 00000011101000001111000000100001
+# R-Type instruction.
+# ADDU rs: 29 rt:  0 rd: 30
+#
+# PC: 8002000c, Instruction: 10101111110000000000000000000000
+# I-Type instruction.
+# SW base: 30 rt:  0 offset:     0
+#
+# PC: 80020010, Instruction: 10101111110000000000000000000100
+# I-Type instruction.
+# SW base: 30 rt:  0 offset:     4
+#
+# PC: 80020014, Instruction: 10101111110000000000000000000000
+# I-Type instruction.
+# SW base: 30 rt:  0 offset:     0
+#
+# PC: 80020018, Instruction: 00001000000000001000000000010000
+# J-Type instruction.
+# J instr_index:    32784
+#
+# PC: 8002001c, Instruction: 00000000000000000000000000000000
+# R-Type instruction.
+# SLL/NOP(sa = 0) sa:  0 rt:  0 rd:  0
+#
+# PC: 80020020, Instruction: 10001111110000100000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     0
+#
+# PC: 80020024, Instruction: 00000000000000100001000010000000
+# R-Type instruction.
+# SLL/NOP(sa = 0) sa:  2 rt:  2 rd:  2
+#
+# PC: 80020028, Instruction: 00000011110000100001000000100001
+# R-Type instruction.
+# ADDU rs: 30 rt:  2 rd:  2
+#
+# PC: 8002002c, Instruction: 10001111110000110000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  3 offset:     0
+#
+# PC: 80020030, Instruction: 10101100010000110000000000001000
+# I-Type instruction.
+# SW base:  2 rt:  3 offset:     8
+#
+# PC: 80020034, Instruction: 10001111110000100000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     0
+#
+# PC: 80020038, Instruction: 00100100010000100000000000000001
+# I-Type instruction.
+# ADDIU rs:  2 rt:  2 immediate:     1
+#
+# PC: 8002003c, Instruction: 10101111110000100000000000000000
+# I-Type instruction.
+# SW base: 30 rt:  2 offset:     0
+#
+# PC: 80020040, Instruction: 10001111110000100000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     0
+#
+# PC: 80020044, Instruction: 00101000010000100000000000001010
+# I-Type instruction.
+# SLTI rs:  2 rt:  2 immediate:    10
+#
+# PC: 80020048, Instruction: 00010100010000001111111111110101
+# J-Type instruction.
+# BNE rs:  2 rt:  0 offset: 65525
+#
+# PC: 8002004c, Instruction: 00000000000000000000000000000000
+# R-Type instruction.
+# SLL/NOP(sa = 0) sa:  0 rt:  0 rd:  0
+#
+# PC: 80020050, Instruction: 10101111110000000000000000000000
+# I-Type instruction.
+# SW base: 30 rt:  0 offset:     0
+#
+# PC: 80020054, Instruction: 00001000000000001000000000100001
+# J-Type instruction.
+# J instr_index:    32801
+#
+# PC: 80020058, Instruction: 00000000000000000000000000000000
+# R-Type instruction.
+# SLL/NOP(sa = 0) sa:  0 rt:  0 rd:  0
+#
+# PC: 8002005c, Instruction: 10001111110000100000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     0
+#
+# PC: 80020060, Instruction: 00000000000000100001000010000000
+# R-Type instruction.
+# SLL/NOP(sa = 0) sa:  2 rt:  2 rd:  2
+#
+# PC: 80020064, Instruction: 00000011110000100001000000100001
+# R-Type instruction.
+# ADDU rs: 30 rt:  2 rd:  2
+#
+# PC: 80020068, Instruction: 10001100010000100000000000001000
+# I-Type instruction.
+# LW base:  2 rt:  2 offset:     8
+#
+# PC: 8002006c, Instruction: 10001111110000110000000000000100
+# I-Type instruction.
+# LW base: 30 rt:  3 offset:     4
+#
+# PC: 80020070, Instruction: 00000000011000100001000000100001
+# R-Type instruction.
+# ADDU rs:  3 rt:  2 rd:  2
+#
+# PC: 80020074, Instruction: 10101111110000100000000000000100
+# I-Type instruction.
+# SW base: 30 rt:  2 offset:     4
+#
+# PC: 80020078, Instruction: 10001111110000100000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     0
+#
+# PC: 8002007c, Instruction: 00100100010000100000000000000001
+# I-Type instruction.
+# ADDIU rs:  2 rt:  2 immediate:     1
+#
+# PC: 80020080, Instruction: 10101111110000100000000000000000
+# I-Type instruction.
+# SW base: 30 rt:  2 offset:     0
+#
+# PC: 80020084, Instruction: 10001111110000100000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     0
+#
+# PC: 80020088, Instruction: 00101000010000100000000000001010
+# I-Type instruction.
+# SLTI rs:  2 rt:  2 immediate:    10
+#
+# PC: 8002008c, Instruction: 00010100010000001111111111110011
+# J-Type instruction.
+# BNE rs:  2 rt:  0 offset: 65523
+#
+# PC: 80020090, Instruction: 00000000000000000000000000000000
+# R-Type instruction.
+# SLL/NOP(sa = 0) sa:  0 rt:  0 rd:  0
+#
+# PC: 80020094, Instruction: 10001111110000100000000000000100
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     4
+#
+# PC: 80020098, Instruction: 00000011110000001110100000100001
+# R-Type instruction.
+# ADDU rs: 30 rt:  0 rd: 29
+#
+# PC: 8002009c, Instruction: 10001111101111100000000000110100
+# I-Type instruction.
+# LW base: 29 rt: 30 offset:    52
+#
+# PC: 800200a0, Instruction: 00100111101111010000000000111000
+# ** Note: $finish    : fetch_tb.v(88)
+#    Time: 980 ns  Iteration: 0  Instance: /fetch_tb

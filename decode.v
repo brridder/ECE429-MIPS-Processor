@@ -160,7 +160,8 @@ module decode (
 	              $display("unimplemented/incorrect intruction");  
 
             endcase // case (insn[26:31])
-
+            
+            $display("");
 	    end // if (insn_valid = 1'b1)
 
     end // always @ (posedge clock)
