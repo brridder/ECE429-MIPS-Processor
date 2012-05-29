@@ -1,23 +1,64 @@
-# opened file srec_files/SimpleAdd.srec
-# 
-# Initializing memory
-# read in file 
-# 
-# 80020000: 27bdffe8
-# 80020004: afbe0014
-# 80020008: 03a0f021
-# 8002000c: 24020003
-# 80020010: afc20000
-# 80020014: 24020002
-# 80020018: afc20004
-# 8002001c: afc00008
-# 80020020: 8fc30000
-# 80020024: 8fc20004
-# 80020028: 00621021
-# 8002002c: afc20008
-# 80020030: 8fc20008
-# 80020034: 03c0e821
-# 80020038: 8fbe0014
-# 8002003c: 27bd0018
-# 80020040: 03e00008
-# 80020044: 00000000
+#
+# PC: 80020000, Instruction: 00100111101111011111111111101000
+# I-Type instruction.
+# ADDIU rs: 29 rt: 29 immediate: 65512
+#
+# PC: 80020004, Instruction: 10101111101111100000000000010100
+# I-Type instruction.
+# SW base: 29 rt: 30 offset:    20
+#
+# PC: 80020008, Instruction: 00000011101000001111000000100001
+# R-Type instruction.
+# ADDU rs: 29 rt:  0 rd: 30
+#
+# PC: 8002000c, Instruction: 00100100000000100000000000000011
+# I-Type instruction.
+# ADDIU rs:  0 rt:  2 immediate:     3
+#
+# PC: 80020010, Instruction: 10101111110000100000000000000000
+# I-Type instruction.
+# SW base: 30 rt:  2 offset:     0
+#
+# PC: 80020014, Instruction: 00100100000000100000000000000010
+# I-Type instruction.
+# ADDIU rs:  0 rt:  2 immediate:     2
+#
+# PC: 80020018, Instruction: 10101111110000100000000000000100
+# I-Type instruction.
+# SW base: 30 rt:  2 offset:     4
+#
+# PC: 8002001c, Instruction: 10101111110000000000000000001000
+# I-Type instruction.
+# SW base: 30 rt:  0 offset:     8
+#
+# PC: 80020020, Instruction: 10001111110000110000000000000000
+# I-Type instruction.
+# LW base: 30 rt:  3 offset:     0
+#
+# PC: 80020024, Instruction: 10001111110000100000000000000100
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     4
+#
+# PC: 80020028, Instruction: 00000000011000100001000000100001
+# R-Type instruction.
+# ADDU rs:  3 rt:  2 rd:  2
+#
+# PC: 8002002c, Instruction: 10101111110000100000000000001000
+# I-Type instruction.
+# SW base: 30 rt:  2 offset:     8
+#
+# PC: 80020030, Instruction: 10001111110000100000000000001000
+# I-Type instruction.
+# LW base: 30 rt:  2 offset:     8
+#
+# PC: 80020034, Instruction: 00000011110000001110100000100001
+# R-Type instruction.
+# ADDU rs: 30 rt:  0 rd: 29
+#
+# PC: 80020038, Instruction: 10001111101111100000000000010100
+# I-Type instruction.
+# LW base: 29 rt: 30 offset:    20
+#
+# PC: 8002003c, Instruction: 00100111101111010000000000011000
+# ** Note: $finish    : fetch_tb.v(88)
+#    Time: 420 ns  Iteration: 0  Instance: /fetch_tb
