@@ -133,7 +133,7 @@ module decode (
 	  
 	  
             default:
-	       $display("unimplemented/incorrect intruction");  
+	       $display("Unimplemented/incorrect instruction");  
                 //insn_type <= INVALID_INS;
     
         endcase // case (insn[26:31])
