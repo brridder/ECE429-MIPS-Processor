@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage{inconsolata}
+\usepackage{fullpage}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.5,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\begin{document}
+\lstset{language=verilog,
+        frame=single,
+        breaklines=true,
+        stepnumber=2,
+        basicstyle=\ttfamily\itshape,
+        columns=fullflexible,
+        showspaces=false,
+        showstringspaces=false,
+        keywordstyle=\bf\color{blue},
+        commentstyle=\color{dkgreen}
+        }
+\input{title.tex}
+\section{Output}
+\lstset{caption={Bubble Sort Output}, label=bubblesort_out}
+\lstinputlisting{BubbleSort_output.txt}
+
+\lstset{caption={Simple Add Output}, label=simpleadd_out}
+\lstinputlisting{SimpleAdd_output.txt}
+
+\lstset{caption={Simple If Output}, label=simpleif_out}
+\lstinputlisting{SimpleIf_output.txt}
+
+\section{Source Code}
+
+\lstset{caption={Fetch Module}, label=fetchsrc}
+\lstinputlisting{../../fetch.v}
+
+\lstset{caption={Fetch Module Test Bench}, label=fetchtbsrc}
+\lstinputlisting{../../fetch_tb.v}
+
+\lstset{caption={Decode Module}, label=decodersrc}
+\lstinputlisting{../../decode.v}
+
+\lstset{caption={Decode Module Test Bench}, label=decodetbsrc}
+\lstinputlisting{../../decode_tb.v}
+
+
+\end{document}

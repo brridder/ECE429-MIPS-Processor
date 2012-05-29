@@ -13,7 +13,8 @@ module decode (
     input wire[0:31] insn;
     input wire[0:31] pc;
     input wire clock;
-    input wire insn_valid
+    input wire  insn_valid;
+   
     
     reg[0:1] insn_type;
     
@@ -50,8 +51,8 @@ module decode (
 	    if(insn_valid) begin
             case(opcode)
 	            // R-TYPE
-                $display("R-Type instruction");                
                 6'b000000: begin
+                    $display("R-Type instruction.");
 	                case(funct)
                         6'b100000: //ADD
 	                      $display("ADD rs: %d rt: %d rd: %d", rs, rt, rd);
@@ -87,32 +88,65 @@ module decode (
 
 	            //I-TYPE
 	            6'b001001: 	//ADDIU
+                begin
+                  $display("I-Type instruction.");
 	              $display("ADDIU rs: %d rt: %d immediate: %d", rs, rt, immediate);
+                end
 	            6'b001010: 	//SLTI
+                begin
+                  $display("I-Type instruction.");
 	              $display("SLTI rs: %d rt: %d immediate: %d", rs, rt, immediate);
+                end
 	            6'b100011: 	//LW
+                begin
+                  $display("I-Type instruction.");
 	              $display("LW base: %d rt: %d offset: %d", base, rt, offset);
+                end
 	            6'b101011: 	//SW
+                begin
+                  $display("I-Type instruction.");
 	              $display("SW base: %d rt: %d offset: %d", base, rt, offset);
+                end
 	            6'b001111: 	//LUI
+                begin
+                  $display("I-Type instruction.");
 	              $display("LUI rt: %d immediate: %d", rt, immediate);
+                end
 	            6'b001101: 	//ORI
+                begin
+                  $display("I-Type instruction.");
 	              $display("ORI rs: %d rt: %d immediate: %d", rs, rt, immediate);
-
+                end
 	            //J-TYPE
 	            6'b000010: 	//J
+                begin
+                  $display("J-Type instruction.");
 	              $display("J instr_index: %d", j_address);
+                end
 	            6'b000100: 	//BEQ
+                begin
+                  $display("J-Type instruction.");
 	              $display("BEQ rs: %d rt: %d offset: %d", rs, rt, offset);
+                end
 	            6'b000101: 	//BNE
+                begin
+                  $display("J-Type instruction.");
 	              $display("BNE rs: %d rt: %d offset: %d", rs, rt, offset);
+                end
 	            6'b000111: 	//BGTZ
+                begin
+                  $display("J-Type instruction.");
 	              $display("BGTZ rs: %d offset: %d", rs, offset);
+                end
 	            6'b000110: 	//BLEZ
+                begin
+                  $display("J-Type instruction.");
 	              $display("BLEZ rs: %d offset: %d", rs, offset);
-
+                end
+                
 	            6'b000001: //REGIMM instructions
 	            begin
+                    $display("REGIMM-Type instruction.");
 		            case(rt)
 		                5'b00000:	//BLTZ
 		                  $display("BLTZ rs: %d offset: %d", rs, offset);
