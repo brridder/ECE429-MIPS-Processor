@@ -81,6 +81,13 @@ module fetch_tb;
     assign fetch_data_in = data_out;
     assign data_in = srec_done ? (fetch_stall ? tb_data_in : fetch_data_in) : srec_data_in;
 
+    // Specify when to stop the simulation
+    event terminate_sim;
+    initial begin 
+        @ (terminate_sim);
+        #10 $finish;
+    end
+   
     initial begin
         clock = 1;
         fetch_stall = 1;
@@ -114,6 +121,7 @@ module fetch_tb;
 
 	        read_word = tb_data_out;
             fetch_word = fetch_data_out;
+
             if (fetch_address-4 >= 32'h8002_0000) begin
 
                 $display("PC: %X, Instruction: %b", fetch_address - 4, fetch_word);

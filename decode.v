@@ -6,14 +6,16 @@
 module decode (
     clock,
     insn,
-    insn_valid
+    insn_valid,
+    pc
 );
 
     input wire[0:31] insn;
+    input wire[0:31] pc;
     input wire clock;
-    input wire insn_valid;
-    reg[0:1] insn_type;
+    input wire insn_valid
     
+    reg[0:1] insn_type;
     
     wire[0:5] opcode;
     wire[4:0] rs;
@@ -24,14 +26,13 @@ module decode (
     wire[15:0] immediate;
     wire[25:0] j_address;
     wire[4:0] base;
-    wire [15:0] offset;
+    wire[15:0] offset;
    
     // Instruction types
     parameter I_TYPE = 0;
     parameter J_TYPE = 1;
     parameter R_TYPE = 2;
     parameter INVALID_INS = 3;
-
 
     assign opcode = insn[0:5];
     assign rs = insn[6:10];
@@ -47,13 +48,10 @@ module decode (
     always @(posedge clock)
     begin
 	    if(insn_valid) begin
-            //opcode <= insn[26:31];
-            // DEBUG
-            // $display("Got instr (decode.v) %b", insn);
-            $display("Got opcode (decode.v) %b", opcode);
             case(opcode)
 	            // R-TYPE
-                6'b000000: begin	
+                $display("R-Type instruction");                
+                6'b000000: begin
 	                case(funct)
                         6'b100000: //ADD
 	                      $display("ADD rs: %d rt: %d rd: %d", rs, rt, rd);
