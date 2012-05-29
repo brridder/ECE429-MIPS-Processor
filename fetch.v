@@ -33,7 +33,7 @@ module fetch (
 
     always @(posedge clock)
     begin
-        if (stall) begin
+        if (stall != 1'b1) begin
             address <= pc;
             insn_decode <= insn;
             pc <= pc +4;

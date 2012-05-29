@@ -126,7 +126,6 @@ module decode (
 	            end
                 default:
 	              $display("unimplemented/incorrect intruction");  
-                //insn_type <= INVALID_INS;
 
             endcase // case (insn[26:31])
 

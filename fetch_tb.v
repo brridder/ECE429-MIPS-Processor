@@ -102,31 +102,26 @@ module fetch_tb;
         byte_count = bytes_read;
         tb_address = 32'h8002_0000;
         tb_wren = 1'b0;
+        instruction_valid = 1'b0;
+        fetch_stall = 0;   
         while (byte_count > 0) begin
             @(posedge clock);
-	        instruction_valid = 1'b0;
-	        read_word = tb_data_out;
-	 
-            fetch_stall = 0;   
-            @(posedge clock); 
-            @(posedge clock)
-            fetch_stall = 1;
-            fetch_word = fetch_data_out;
-            if (tb_address != fetch_address 
-                && read_word != fetch_word 
-                && fetch_pc == byte_count) begin
-                $display("2: %8X :: %8X :: %8X :: %8X :: %h", tb_address,
-                                fetch_address, read_word, fetch_word, data_out);
+            if ((fetch_address - 4) < 32'h8002_000) begin
+                instruction_valid = 1'b0;
+            end else begin
+                instruction_valid = 1'b1;
+            end
 
-            end    
-            //$display("a: %b, ", fetch_word[31:26] );
-	   $display("PC: %X, Instruction: %b", fetch_address, fetch_word);
-	   instruction_valid = 1'b1;
-	   
-	   
-	        tb_address = tb_address + 4;
-	        byte_count = byte_count - 4; // 27 = 0010 011
+	        read_word = tb_data_out;
+            fetch_word = fetch_data_out;
+            if (fetch_address-4 >= 32'h8002_0000) begin
+
+                $display("PC: %X, Instruction: %b", fetch_address - 4, fetch_word);
+            end
+            tb_address = tb_address + 4;
+            byte_count = byte_count - 4; // 27 = 0010 011
         end
+        instruction_valid = 1'b0;
     end
 
 endmodule
