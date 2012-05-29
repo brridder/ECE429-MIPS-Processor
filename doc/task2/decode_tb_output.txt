@@ -1,0 +1,80 @@
+# R-Type instruction.
+# ADD rs:  5 rt: 24 rd:  6
+#
+# R-Type instruction.
+# ADDU rs:  1 rt:  3 rd:  2
+#
+# R-Type instruction.
+# SUB rs:  0 rt:  2 rd:  3
+#
+# R-Type instruction.
+# SUBU rs:  0 rt:  2 rd:  3
+#
+# R-Type instruction.
+# SLT rs:  0 rt:  2 rd:  3
+#
+# R-Type instruction.
+# SLTU rs:  0 rt:  2 rd:  3
+#
+# R-Type instruction.
+# SLL/NOP(sa = 0) sa:  1 rt:  2 rd:  3
+#
+# R-Type instruction.
+# SRL sa:  1 rt:  2 rd:  3
+#
+# R-Type instruction.
+# SRA sa:  1 rt:  2 rd:  3
+#
+# R-Type instruction.
+# AND rs:  0 rt:  2 rd:  3
+#
+# R-Type instruction.
+# OR rs:  0 rt:  2 rd:  3
+#
+# R-Type instruction.
+# XOR rs:  0 rt:  2 rd:  3
+#
+# R-Type instruction.
+# NOR rs:  0 rt:  2 rd:  3
+#
+# I-Type instruction.
+# ADDIU rs: 29 rt: 29 immediate: 65481
+#
+# I-Type instruction.
+# SLTI rs:  0 rt:  2 immediate:  6217
+#
+# I-Type instruction.
+# LW base:  0 rt:  2 offset:  6217
+#
+# I-Type instruction.
+# SW base:  0 rt:  2 offset:  6217
+#
+# I-Type instruction.
+# LUI rt:  2 immediate:  6223
+#
+# I-Type instruction.
+# ORI rs:  0 rt:  2 immediate:  6221
+#
+# J-Type instruction.
+# J instr_index:   137282
+#
+# J-Type instruction.
+# BEQ rs:  0 rt:  2 offset:  6212
+#
+# J-Type instruction.
+# BNE rs:  0 rt:  2 offset:  6213
+#
+# J-Type instruction.
+# BGTZ rs:  0 offset:  6215
+#
+# J-Type instruction.
+# BLEZ rs:  0 offset:  6214
+#
+# REGIMM-Type instruction.
+# BLTZ rs:  0 offset:    65
+#
+# REGIMM-Type instruction.
+# BGEZ rs:  0 offset: 18497
+#
+# ** Note: $finish    : decode_tb.v(44)
+#    Time: 280 ns  Iteration: 0  Instance: /decode_tb
