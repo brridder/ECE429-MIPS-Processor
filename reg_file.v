@@ -12,15 +12,15 @@ module reg_file (
     clock,
     rsOut,
     rtOut,
-    //rsIn,
-    //rtIn,
+    rsIn,
+    rtIn,
     rdIn,
-    //regWriteEnable,
-    writeBackData,
-    pcIn,
-    irIn,
-    pcOut,
-    irOut
+    regWriteEnable,
+    writeBackData
+    //pcIn,
+    //irIn,
+    //pcOut,
+    //irOut
 );
    
     parameter REG_WIDTH = 32;
@@ -28,24 +28,25 @@ module reg_file (
 
     input wire clock;
     input wire[4:0] rdIn;
-    input wire[0:31] pcIn;
-    input wire[0:31] irIn;
+    //input wire[0:31] pcIn;
+    //input wire[0:31] irIn;
     input wire[0:31] writeBackData;
 
     output reg[0:31] rsOut;
     output reg[0:31] rtOut;
-    output reg[0:31] pcOut;
-    output reg[0:31] irOut;
+    //output reg[0:31] pcOut;
+    //output reg[0:31] irOut;
 
-    wire[4:0] rs;
-    wire[4:0] rt;
-    wire regWriteEnable;
+    input wire[4:0] rsIn;
+    input wire[4:0] rtIn;
+    input wire regWriteEnable;
+
     reg[0:REG_WIDTH-1] registers[0:NUM_REGS-1];
 
     integer i;
 
-    assign rs = irIn[6:10];
-    assign rt = irIn[11:15];
+    //assign rs = irIn[6:10];
+    //assign rt = irIn[11:15];
     
     // Zero out all of the registers.
     initial 
@@ -58,8 +59,8 @@ module reg_file (
     always @(posedge clock)
     begin
         fork
-            rsOut <= registers[rs];
-            rtOut <= registers[rt];
+            rsOut <= registers[rsIn];
+            rtOut <= registers[rtIn];
         join
         registers[rdIn] = writeBackData;
     end // always @(posedge clock) 
