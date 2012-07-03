@@ -63,7 +63,7 @@ begin
     rdIn = 5'b0_0001; // $r1
     writeBackData = 32'hbeaf_dead;
     @ (posedge clock);
-    inst = 32'h000000_00000_00001_00010_00000_100000;
+    inst = 32'b000000_00000_00001_00010_00000_100000;
     rdIn = 5'b0_0100; // $r4
     writeBackData = 32'hbeef_deed;
     @ (posedge clock);
