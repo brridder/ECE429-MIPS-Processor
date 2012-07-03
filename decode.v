@@ -14,6 +14,7 @@ module decode (
     rtData,
     rdIn,
     pcOut,
+    irOut,
     writeBackData,
     regWriteEnable,
     control
@@ -23,13 +24,14 @@ module decode (
     input wire[0:31] pc;
     input wire clock;
     input wire insn_valid;
-    input wire[0:31] rdIn;
+    input wire[4:0] rdIn;
     input wire[0:31] writeBackData;
     input wire regWriteEnable;
 
     output wire[0:31] rsData; // Latched in the reg_file module
     output wire[0:31] rtData;
     output reg[0:31] pcOut; 
+    output reg[0:31] irOut;
     output reg[0:`CONTROL_REG_SIZE-1] control;    
 
     reg[0:1] insn_type;
@@ -65,6 +67,7 @@ module decode (
     assign opcode = insn[0:5];
     assign rs = insn[6:10];
     assign base = insn[6:10];
+
     assign rt = insn[11:15];
     assign rd = insn[16:20];
     assign shift_amount = insn[20:25];
@@ -75,7 +78,16 @@ module decode (
     
     always @(posedge clock)
     begin
-        pcOut = pc;
+        if (insn_valid) begin
+            pcOut <= pc;
+        end
+    end
+
+    always @(posedge clock)
+    begin
+        if (insn_valid) begin
+            irOut <= insn;
+        end
     end
 
     always @(posedge clock)
@@ -207,7 +219,7 @@ module decode (
 
             endcase // case (insn[26:31])
             
-            $display("");
+            $display("%d", $time);
 	    end // if (insn_valid = 1'b1)
 
     end // always @ (posedge clock)

@@ -1,75 +1,162 @@
 //
-// reg_file_tb.v
+// fetch_tb.v
 //
-// Register File Unit Test Bench
+// Fetch test bench
 //
 
-module reg_file_tb();
+module reg_file_tb;
+    reg clock;
 
-reg clock;
+    wire[0:31] address;
+    wire       wren;
+    wire[0:31] data_in;
+    wire[0:31] data_out;
 
-reg[0:31] inst;
-reg[0:31] data;
-reg[0:31] pc;
-reg[0:31] writeBackData;
-reg[0:4]  rdIn;
+    wire[0:31] fetch_address;
+    wire       fetch_wren;
+    wire[0:31] fetch_data_in;
+    wire[0:31] fetch_data_out;
+    
+    wire[0:31] fetch_insn_decode;
+    wire[0:31] fetch_pc;
+    wire[0:31] fetch_pc_out;
+    reg        fetch_stall; 
+   
+    wire[0:31] decode_rs_data;
+    wire[0:31] decode_rt_data;
+    wire[4:0]  decode_rd_in;
+    wire[0:31] decode_pc_out;
+    wire[0:31] decode_ir_out;
+    wire[0:31] decode_write_back_data;
+    wire       decode_reg_write_enable;
+    wire[0:`CONTROL_REG_SIZE-1] decode_control;
 
-wire[0:31] rsOut;
-wire[0:31] rtOut;
-wire[0:31] pcOut;
-wire[0:31] irOut;
+    wire[0:31] srec_address;
+    wire       srec_wren;
+    wire[0:31] srec_data_in;
+    wire[0:31] srec_data_out;
+
+    wire       srec_done;
+
+    reg[0:31]  tb_address;
+    reg        tb_wren;
+    reg[0:31]  tb_data_in;
+    wire[0:31] tb_data_out;
+        
+
+    
+    wire[0:31] bytes_read;
+    integer    byte_count;
+    integer    read_word;
+    reg[0:31]    fetch_word;
+
+    reg instruction_valid;
+
+    mem_controller mcu(
+        .clock (clock), 
+        .address (address), 
+        .wren (wren), 
+        .data_in (data_in), 
+        .data_out (data_out)
+    );
+
+    fetch DUT(
+        .clock (clock), 
+        .address (fetch_address),
+        .insn (fetch_data_in),
+        .insn_decode (fetch_data_out),
+        .pc (fetch_pc),
+        .pc_out (fetch_pc_out),
+        .wren (fetch_wren),
+        .stall (fetch_stall)
+    );
+    
+    srec_parser #("srec_files/SumArray.srec") U0(
+        .clock (clock),
+        .mem_address (srec_address),
+        .mem_wren (srec_wren),
+        .mem_data_in (srec_data_in),
+        .mem_data_out (srec_data_out),
+        .done (srec_done),
+        .bytes_read(bytes_read)
+    );
+
+    decode U1(
+        .clock (clock),
+        .insn (fetch_word),
+	    .insn_valid (instruction_valid),
+        .pc (fetch_pc_out),
+        .rsData (decode_rs_data),
+        .rtData (decode_rt_data),
+        .rdIn (decode_rd_in),
+        .pcOut (decode_pc_out),
+        .irOut (decode_ir_out),
+        .writeBackData (decode_write_back_data),
+        .regWriteEnable (decode_reg_write_enable),
+        .control (decode_control)
+    );
 
 
-reg_file U0(
-    .clock (clock),
-    .rsOut (rsOut),
-    .rtOut (rtOut),
-    .rdIn (rdIn),
-    .writeBackData (writeBackData),
-    .pcIn (pc),
-    .pcOut (pcOut),
-    .irIn (inst),
-    .irOut (irOut)
-);
+     
+    assign address = srec_done ? (fetch_stall ? tb_address : fetch_address) : srec_address;
+    assign wren = srec_done ? (fetch_stall ? tb_wren : fetch_wren) : srec_wren;
+    assign tb_data_out = data_out;
+    assign fetch_data_in = data_out;
+    assign data_in = srec_done ? (fetch_stall ? tb_data_in : fetch_data_in) : srec_data_in;
 
-initial begin
-    clock = 1;
-    inst = 0;
-    data = 0;
-    pc = 0;
-    writeBackData = 0;
-end
+    // Specify when to stop the simulation
+    event terminate_sim;
+    initial begin 
+        @ (terminate_sim);
+        #10 $finish;
+    end
+   
+    initial begin
+        clock = 1;
+        fetch_stall = 1;
+        instruction_valid = 1'b0;
+    end
 
-initial begin
-    $display("\t\ttime,\tclock,\tpcIn,\tpcOut,\tirIn,\tirOut,\trsOut,\trtOut,\twriteBackData");
-    $monitor("%d,\t%b,\t%h,\t%h,\t%h,\t%h,\t%h,\t%h,\t%h",
-             $time, clock, pc, pcOut, inst, irOut, rsOut, rtOut, writeBackData);
-end
+    always begin
+        #5 clock = !clock;
+    end 
 
+    initial begin
+        $dumpfile("fetch_tb.vcd");
+        $dumpvars;
+    end
 
-always begin
-    #5 clock = !clock;
-end
+    initial begin
+        @(posedge srec_done);
+        @(posedge clock);
+        byte_count = bytes_read;
+        tb_address = 32'h8002_0000;
+        tb_wren = 1'b0;
+        instruction_valid = 1'b0;
+        fetch_stall = 0;   
+        while (byte_count > 0) begin
+            @(posedge clock);
+            if ((fetch_address - 4) < 32'h8002_0000) begin
+                instruction_valid = 1'b0;
+            end else begin
+                instruction_valid = 1'b1;
+            end
 
-initial
-begin
-    pc = 32'hdead_beef;
-    inst = 32'h0000_0000;
-    rdIn = 5'b0_0000; // $r0
-    writeBackData = 32'hdeed_deed;
-    @ (posedge clock);
-    pc = 32'hffff_eeee;
-    inst = 32'h0000_0000;
-    rdIn = 5'b0_0001; // $r1
-    writeBackData = 32'hbeaf_dead;
-    @ (posedge clock);
-    inst = 32'h000000_00000_00001_00010_00000_100000;
-    rdIn = 5'b0_0100; // $r4
-    writeBackData = 32'hbeef_deed;
-    @ (posedge clock);
-end
+	        read_word = tb_data_out;
+            fetch_word = fetch_data_out;
 
-initial 
-    #100 $finish;
+            if (fetch_address-4 >= 32'h8002_0000) begin
+                //$display("PC: %X, Instruction: %b", fetch_address - 4, fetch_word);
+                $display("Time: %d,PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out, decode_rs_data, decode_rt_data, decode_ir_out);
+                $display("*********************");
+                $display("");
+            end
+            tb_address = tb_address + 4;
+            byte_count = byte_count - 4; // 27 = 0010 011
+
+        end
+        instruction_valid = 1'b0;
+        ->terminate_sim;
+    end
 
 endmodule

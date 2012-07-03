@@ -17,10 +17,6 @@ module reg_file (
     rdIn,
     regWriteEnable,
     writeBackData
-    //pcIn,
-    //irIn,
-    //pcOut,
-    //irOut
 );
    
     parameter REG_WIDTH = 32;
@@ -28,14 +24,10 @@ module reg_file (
 
     input wire clock;
     input wire[4:0] rdIn;
-    //input wire[0:31] pcIn;
-    //input wire[0:31] irIn;
     input wire[0:31] writeBackData;
 
     output reg[0:31] rsOut;
     output reg[0:31] rtOut;
-    //output reg[0:31] pcOut;
-    //output reg[0:31] irOut;
 
     input wire[4:0] rsIn;
     input wire[4:0] rtIn;
@@ -45,14 +37,11 @@ module reg_file (
 
     integer i;
 
-    //assign rs = irIn[6:10];
-    //assign rt = irIn[11:15];
-    
     // Zero out all of the registers.
     initial 
     begin
         for (i = 0; i < NUM_REGS; i = i + 1) begin
-            registers[i] = 0;
+            registers[i] = i;
         end // for ()
     end // initial
 
@@ -61,6 +50,7 @@ module reg_file (
         fork
             rsOut <= registers[rsIn];
             rtOut <= registers[rtIn];
+            $display("Rs %d, RT: %d", registers[rsIn], registers[rtIn]);
         join
         registers[rdIn] = writeBackData;
     end // always @(posedge clock) 

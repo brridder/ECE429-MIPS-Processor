@@ -9,6 +9,7 @@ module fetch (
     insn,
     insn_decode,
     pc,
+    pc_out,
     wren,
     stall
 );
@@ -20,8 +21,8 @@ module fetch (
     output reg[0:31] address; // Output address supplied to the address input of the main memory. This signal transmits the PC for the instruction we are going to fetch
     output reg[0:31] insn_decode; // This transmits the instruction received from the main memory from insn
     output reg[0:31] pc; // transmits PC to the decode stage
+    output reg[0:31] pc_out; 
     output reg wren; // indicates whether the fetch stage is performing a read or write to the main memory. Should always be asserted to a read for the fetch stage.
-    
     reg[2:0] stage;
 
     initial
@@ -40,4 +41,10 @@ module fetch (
         end
     end
 
+    always @(posedge clock)
+    begin 
+        if (stall != 1'b1) begin
+            pc_out <= pc;
+        end
+    end
 endmodule
