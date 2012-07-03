@@ -92,13 +92,12 @@ module decode (
 
     always @(posedge clock)
       begin
-	  control[`R_TYPE] = 1'b0;
 	    if(insn_valid) begin
+            control[`I_TYPE] = 1'b0;
             case(opcode)
 	            // R-TYPE
                 6'b000000: begin
                     $display("R-Type instruction.");
-		    control[`R_TYPE] = 1'b1;
 	                case(funct)
                         6'b100000: //ADD
 	                      $display("ADD rs: %d rt: %d rd: %d", rs, rt, rd);
@@ -138,37 +137,43 @@ module decode (
                 begin
                   $display("I-Type instruction.");
 	              $display("ADDIU rs: %d rt: %d immediate: %d", rs, rt, immediate);
-                  control[`REG_WE] = 1;
+                  control[`REG_WE] = 1'b1;
+                  control[`I_TYPE] = 1'b1;
                 end
 	            6'b001010: 	//SLTI
                 begin
                   $display("I-Type instruction.");
 	              $display("SLTI rs: %d rt: %d immediate: %d", rs, rt, immediate);
                   control[`REG_WE] = 1;
+                  control[`I_TYPE] = 1'b1;
                 end
 	            6'b100011: 	//LW
                 begin
                   $display("I-Type instruction.");
 	              $display("LW base: %d rt: %d offset: %d", base, rt, offset);
                   control[`REG_WE] = 1;
+                  control[`I_TYPE] = 1'b1;
                 end
 	            6'b101011: 	//SW
                 begin
                   $display("I-Type instruction.");
 	              $display("SW base: %d rt: %d offset: %d", base, rt, offset);
                   control[`REG_WE] = 0;
+                  control[`I_TYPE] = 1'b1;
                 end
 	            6'b001111: 	//LUI
                 begin
                   $display("I-Type instruction.");
 	              $display("LUI rt: %d immediate: %d", rt, immediate);
                   control[`REG_WE] = 1;
+                  control[`I_TYPE] = 1'b1;
                 end
 	            6'b001101: 	//ORI
                 begin
                   $display("I-Type instruction.");
 	              $display("ORI rs: %d rt: %d immediate: %d", rs, rt, immediate);
                   control[`REG_WE] = 1;
+                  control[`I_TYPE] = 1'b1;
                 end
 	            //J-TYPE
 	            6'b000010: 	//J
