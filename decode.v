@@ -97,6 +97,7 @@ module decode (
 	            // R-TYPE
                 6'b000000: begin
                     $display("R-Type instruction.");
+		    control[`R_TYPE] = 1'b0;
 	                case(funct)
                         6'b100000: //ADD
 	                      $display("ADD rs: %d rt: %d rd: %d", rs, rt, rd);
