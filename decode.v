@@ -94,10 +94,11 @@ module decode (
       begin
 	    if(insn_valid) begin
             control[`I_TYPE] = 1'b0;
+	    control[`R_TYPE] = 1'b0;
             case(opcode)
 	            // R-TYPE
                 6'b000000: begin
-                    $display("R-Type instruction.");
+		    control[`R_TYPE] = 1'b1;
                     control[`REG_WE] = 1;
 	            end // case: 6'b000000
 
