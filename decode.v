@@ -98,136 +98,80 @@ module decode (
 	            // R-TYPE
                 6'b000000: begin
                     $display("R-Type instruction.");
-	                case(funct)
-                        6'b100000: //ADD
-	                      $display("ADD rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b100001: //ADDU
-	                      $display("ADDU rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b100010: //SUB
-	                      $display("SUB rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b100011: //SUBU
-	                      $display("SUBU rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b101010: //SLT
-	                      $display("SLT rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b101011: //SLTU
-	                      $display("SLTU rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b000000: //SLL
-	                      $display("SLL/NOP(sa = 0) sa: %d rt: %d rd: %d", shift_amount, rt, rd);
-	                    6'b000010: //SRL
-	                      $display("SRL sa: %d rt: %d rd: %d", shift_amount, rt, rd);
-	                    6'b000011: //SRA
-	                      $display("SRA sa: %d rt: %d rd: %d", shift_amount, rt, rd);
-	                    6'b100100: //AND
-	                      $display("AND rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b100101: //OR
-	                      $display("OR rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b100110: //XOR
-	                      $display("XOR rs: %d rt: %d rd: %d", rs, rt, rd);
-	                    6'b100111: //NOR
-	                      $display("NOR rs: %d rt: %d rd: %d", rs, rt, rd);
-	                 
-	                    default:
-	                      $display("unimplemented ADD type intruction");   
-	                endcase // case (funct)
                     control[`REG_WE] = 1;
 	            end // case: 6'b000000
 
 	            //I-TYPE
 	            6'b001001: 	//ADDIU
                 begin
-                  $display("I-Type instruction.");
-	              $display("ADDIU rs: %d rt: %d immediate: %d", rs, rt, immediate);
                   control[`REG_WE] = 1'b1;
                   control[`I_TYPE] = 1'b1;
                 end
 	            6'b001010: 	//SLTI
                 begin
-                  $display("I-Type instruction.");
-	              $display("SLTI rs: %d rt: %d immediate: %d", rs, rt, immediate);
                   control[`REG_WE] = 1;
                   control[`I_TYPE] = 1'b1;
                 end
 	            6'b100011: 	//LW
                 begin
-                  $display("I-Type instruction.");
-	              $display("LW base: %d rt: %d offset: %d", base, rt, offset);
                   control[`REG_WE] = 1;
                   control[`I_TYPE] = 1'b1;
                 end
 	            6'b101011: 	//SW
                 begin
-                  $display("I-Type instruction.");
-	              $display("SW base: %d rt: %d offset: %d", base, rt, offset);
                   control[`REG_WE] = 0;
                   control[`I_TYPE] = 1'b1;
                 end
 	            6'b001111: 	//LUI
                 begin
-                  $display("I-Type instruction.");
-	              $display("LUI rt: %d immediate: %d", rt, immediate);
                   control[`REG_WE] = 1;
                   control[`I_TYPE] = 1'b1;
                 end
 	            6'b001101: 	//ORI
                 begin
-                  $display("I-Type instruction.");
-	              $display("ORI rs: %d rt: %d immediate: %d", rs, rt, immediate);
                   control[`REG_WE] = 1;
                   control[`I_TYPE] = 1'b1;
                 end
 	            //J-TYPE
 	            6'b000010: 	//J
                 begin
-                  $display("J-Type instruction.");
-	              $display("J instr_index: %d", j_address);
                   control[`REG_WE] = 1;
                 end
 	            6'b000100: 	//BEQ
                 begin
-                  $display("J-Type instruction.");
-	              $display("BEQ rs: %d rt: %d offset: %d", rs, rt, offset);
                   control[`REG_WE] = 1;
                 end
 	            6'b000101: 	//BNE
                 begin
-                  $display("J-Type instruction.");
-	              $display("BNE rs: %d rt: %d offset: %d", rs, rt, offset);
                   control[`REG_WE] = 1;
                 end
 	            6'b000111: 	//BGTZ
                 begin
-                  $display("J-Type instruction.");
-	              $display("BGTZ rs: %d offset: %d", rs, offset);
                   control[`REG_WE] = 1;
                 end
 	            6'b000110: 	//BLEZ
                 begin
-                  $display("J-Type instruction.");
-	              $display("BLEZ rs: %d offset: %d", rs, offset);
                   control[`REG_WE] = 1;
                 end
-                
 	            6'b000001: //REGIMM instructions
 	            begin
-                    $display("REGIMM-Type instruction.");
 		            case(rt)
 		                5'b00000:	//BLTZ
-		                  $display("BLTZ rs: %d offset: %d", rs, offset);
+				  ;
 		                5'b00001:	//BGEZ
-		                  $display("BGEZ rs: %d offset: %d", rs, offset);
+				  ;
 		                default:
 		                  $display("REGIMM not implemented");
 		            endcase // case (rt)
                   control[`REG_WE] = 0;
 	            end
                 default:
-	              $display("unimplemented/incorrect intruction");  
+	              $display("unimplemented/incorrect instruction");  
                   //control[`REG_WE] = 0;
 
             endcase // case (insn[26:31])
             
-            $display("%d", $time);
-	    end // if (insn_valid = 1'b1)
+    	    end // if (insn_valid = 1'b1)
 
     end // always @ (posedge clock)
    
