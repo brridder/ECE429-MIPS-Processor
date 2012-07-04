@@ -78,16 +78,16 @@ module decode (
     
     always @(posedge clock)
     begin
-        if (insn_valid) begin
+        //if (insn_valid) begin
             pcOut <= pc;
-        end
+        //end
     end
 
     always @(posedge clock)
     begin
-        if (insn_valid) begin
+        //if (insn_valid) begin
             irOut <= insn;
-        end
+        //end
     end
 
     always @(posedge clock)
@@ -167,7 +167,7 @@ module decode (
                   control[`REG_WE] = 0;
 	            end
                 default:
-	              $display("unimplemented/incorrect instruction");  
+	              //$display("unimplemented/incorrect instruction");  
                   //control[`REG_WE] = 0;
 
             endcase // case (insn[26:31])

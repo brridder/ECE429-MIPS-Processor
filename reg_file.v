@@ -50,7 +50,7 @@ module reg_file (
         fork
             rsOut <= registers[rsIn];
             rtOut <= registers[rtIn];
-            $display("Rs %d, RT: %d", registers[rsIn], registers[rtIn]);
+            //$display("time: %d Rs %d, RT: %d", $time, registers[rsIn], registers[rtIn]);
         join
         registers[rdIn] = writeBackData;
     end // always @(posedge clock) 
