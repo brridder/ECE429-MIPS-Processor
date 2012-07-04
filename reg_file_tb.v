@@ -66,7 +66,7 @@ module reg_file_tb;
         .stall (fetch_stall)
     );
     
-    srec_parser #("srec_files/SumArray.srec") U0(
+    srec_parser #("srec_files/SimpleIf.srec") U0(
         .clock (clock),
         .mem_address (srec_address),
         .mem_wren (srec_wren),
@@ -90,8 +90,6 @@ module reg_file_tb;
         .regWriteEnable (decode_reg_write_enable),
         .control (decode_control)
     );
-
-
      
     assign address = srec_done ? (fetch_stall ? tb_address : fetch_address) : srec_address;
     assign wren = srec_done ? (fetch_stall ? tb_wren : fetch_wren) : srec_wren;

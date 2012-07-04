@@ -1,0 +1,26 @@
+# Initializing memory
+# Initializing Fetch module
+# opened file srec_files/SimpleAdd.srec
+# 
+# read in file 
+#
+# Time:                  260, PC: 80020000, RS:        29, RT:        29, IR: 27bdffe8
+# Time:                  270, PC: 80020004, RS:        29, RT:        30, IR: afbe0014
+# Time:                  280, PC: 80020008, RS:        29, RT:         0, IR: 03a0f021
+# Time:                  290, PC: 8002000c, RS:         0, RT:         2, IR: 24020003
+# Time:                  300, PC: 80020010, RS:        30, RT:         2, IR: afc20000
+# Time:                  310, PC: 80020014, RS:         0, RT:         2, IR: 24020002
+# Time:                  320, PC: 80020018, RS:        30, RT:         2, IR: afc20004
+# Time:                  330, PC: 8002001c, RS:        30, RT:         0, IR: afc00008
+# Time:                  340, PC: 80020020, RS:        30, RT:         3, IR: 8fc30000
+# Time:                  350, PC: 80020024, RS:        30, RT:         2, IR: 8fc20004
+# Time:                  360, PC: 80020028, RS:         3, RT:         2, IR: 00621021
+# Time:                  370, PC: 8002002c, RS:        30, RT:         2, IR: afc20008
+# Time:                  380, PC: 80020030, RS:        30, RT:         2, IR: 8fc20008
+# Time:                  390, PC: 80020034, RS:        30, RT:         0, IR: 03c0e821
+# Time:                  400, PC: 80020038, RS:        29, RT:        30, IR: 8fbe0014
+# Time:                  410, PC: 8002003c, RS:        29, RT:        29, IR: 27bd0018
+# Time:                  420, PC: 80020040, RS:        31, RT:         0, IR: 03e00008
+# Time:                  430, PC: 80020044, RS:         0, RT:         0, IR: 00000000
+# ** Note: $finish    : reg_file_tb.v(106)
+#    Time: 440 ns  Iteration: 0  Instance: /reg_file_tb

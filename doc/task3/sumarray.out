@@ -1,0 +1,51 @@
+# Initializing memory
+# Initializing Fetch module
+# opened file srec_files/SumArray.srec
+# 
+# read in file 
+# 
+# Time:                  570, PC: 80020000, RS:        29, RT:        29, IR: 27bdffc8
+# Time:                  580, PC: 80020004, RS:        29, RT:        30, IR: afbe0034
+# Time:                  590, PC: 80020008, RS:        29, RT:         0, IR: 03a0f021
+# Time:                  600, PC: 8002000c, RS:        30, RT:         0, IR: afc00000
+# Time:                  610, PC: 80020010, RS:        30, RT:         0, IR: afc00004
+# Time:                  620, PC: 80020014, RS:        30, RT:         0, IR: afc00000
+# Time:                  630, PC: 80020018, RS:         0, RT:         0, IR: 08008010
+# Time:                  640, PC: 8002001c, RS:         0, RT:         0, IR: 00000000
+# Time:                  650, PC: 80020020, RS:        30, RT:         2, IR: 8fc20000
+# Time:                  660, PC: 80020024, RS:         0, RT:         2, IR: 00021080
+# Time:                  670, PC: 80020028, RS:        30, RT:         2, IR: 03c21021
+# Time:                  680, PC: 8002002c, RS:        30, RT:         3, IR: 8fc30000
+# Time:                  690, PC: 80020030, RS:         2, RT:         3, IR: ac430008
+# Time:                  700, PC: 80020034, RS:        30, RT:         2, IR: 8fc20000
+# Time:                  710, PC: 80020038, RS:         2, RT:         2, IR: 24420001
+# Time:                  720, PC: 8002003c, RS:        30, RT:         2, IR: afc20000
+# Time:                  730, PC: 80020040, RS:        30, RT:         2, IR: 8fc20000
+# Time:                  740, PC: 80020044, RS:         2, RT:         2, IR: 2842000a
+# Time:                  750, PC: 80020048, RS:         2, RT:         0, IR: 1440fff5
+# Time:                  760, PC: 8002004c, RS:         0, RT:         0, IR: 00000000
+# Time:                  770, PC: 80020050, RS:        30, RT:         0, IR: afc00000
+# Time:                  780, PC: 80020054, RS:         0, RT:         0, IR: 08008021
+# Time:                  790, PC: 80020058, RS:         0, RT:         0, IR: 00000000
+# Time:                  800, PC: 8002005c, RS:        30, RT:         2, IR: 8fc20000
+# Time:                  810, PC: 80020060, RS:         0, RT:         2, IR: 00021080
+# Time:                  820, PC: 80020064, RS:        30, RT:         2, IR: 03c21021
+# Time:                  830, PC: 80020068, RS:         2, RT:         2, IR: 8c420008
+# Time:                  840, PC: 8002006c, RS:        30, RT:         3, IR: 8fc30004
+# Time:                  850, PC: 80020070, RS:         3, RT:         2, IR: 00621021
+# Time:                  860, PC: 80020074, RS:        30, RT:         2, IR: afc20004
+# Time:                  870, PC: 80020078, RS:        30, RT:         2, IR: 8fc20000
+# Time:                  880, PC: 8002007c, RS:         2, RT:         2, IR: 24420001
+# Time:                  890, PC: 80020080, RS:        30, RT:         2, IR: afc20000
+# Time:                  900, PC: 80020084, RS:        30, RT:         2, IR: 8fc20000
+# Time:                  910, PC: 80020088, RS:         2, RT:         2, IR: 2842000a
+# Time:                  920, PC: 8002008c, RS:         2, RT:         0, IR: 1440fff3
+# Time:                  930, PC: 80020090, RS:         0, RT:         0, IR: 00000000
+# Time:                  940, PC: 80020094, RS:        30, RT:         2, IR: 8fc20004
+# Time:                  950, PC: 80020098, RS:        30, RT:         0, IR: 03c0e821
+# Time:                  960, PC: 8002009c, RS:        29, RT:        30, IR: 8fbe0034
+# Time:                  970, PC: 800200a0, RS:        29, RT:        29, IR: 27bd0038
+# Time:                  980, PC: 800200a4, RS:        31, RT:         0, IR: 03e00008
+# Time:                  990, PC: 800200a8, RS:         0, RT:         0, IR: 00000000
+# ** Note: $finish    : reg_file_tb.v(106)
+#    Time: 1 us  Iteration: 0  Instance: /reg_file_tb

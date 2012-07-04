@@ -166,7 +166,7 @@ module decode (
                   control[`REG_WE] = 0;
 	            end
                 default:
-	              $display("unimplemented/incorrect instruction");  
+	              //$display("unimplemented/incorrect instruction");  
                   //control[`REG_WE] = 0;
 
             endcase // case (insn[26:31])

@@ -1,0 +1,40 @@
+# Initializing memory
+# Initializing Fetch module
+# opened file srec_files/SimpleIf.srec
+# 
+# read in file 
+# 
+# Time:                  430, PC: 80020000, RS:        29, RT:        29, IR: 27bdffe8
+# Time:                  440, PC: 80020004, RS:        29, RT:        30, IR: afbe0014
+# Time:                  450, PC: 80020008, RS:        29, RT:         0, IR: 03a0f021
+# Time:                  460, PC: 8002000c, RS:         0, RT:         2, IR: 24020003
+# Time:                  470, PC: 80020010, RS:        30, RT:         2, IR: afc20000
+# Time:                  480, PC: 80020014, RS:         0, RT:         2, IR: 24020002
+# Time:                  490, PC: 80020018, RS:        30, RT:         2, IR: afc20004
+# Time:                  500, PC: 8002001c, RS:        30, RT:         0, IR: afc00008
+# Time:                  510, PC: 80020020, RS:        30, RT:         2, IR: 8fc20000
+# Time:                  520, PC: 80020024, RS:         2, RT:         2, IR: 28420005
+# Time:                  530, PC: 80020028, RS:         2, RT:         0, IR: 10400007
+# Time:                  540, PC: 8002002c, RS:         0, RT:         0, IR: 00000000
+# Time:                  550, PC: 80020030, RS:        30, RT:         3, IR: 8fc30000
+# Time:                  560, PC: 80020034, RS:        30, RT:         2, IR: 8fc20004
+# Time:                  570, PC: 80020038, RS:         3, RT:         2, IR: 00621021
+# Time:                  580, PC: 8002003c, RS:        30, RT:         2, IR: afc20000
+# Time:                  590, PC: 80020040, RS:         0, RT:         0, IR: 08008016
+# Time:                  600, PC: 80020044, RS:         0, RT:         0, IR: 00000000
+# Time:                  610, PC: 80020048, RS:        30, RT:         3, IR: 8fc30000
+# Time:                  620, PC: 8002004c, RS:        30, RT:         2, IR: 8fc20004
+# Time:                  630, PC: 80020050, RS:         3, RT:         2, IR: 00621023
+# Time:                  640, PC: 80020054, RS:        30, RT:         2, IR: afc20000
+# Time:                  650, PC: 80020058, RS:        30, RT:         3, IR: 8fc30000
+# Time:                  660, PC: 8002005c, RS:        30, RT:         2, IR: 8fc20004
+# Time:                  670, PC: 80020060, RS:         3, RT:         2, IR: 00621021
+# Time:                  680, PC: 80020064, RS:        30, RT:         2, IR: afc20008
+# Time:                  690, PC: 80020068, RS:        30, RT:         2, IR: 8fc20008
+# Time:                  700, PC: 8002006c, RS:        30, RT:         0, IR: 03c0e821
+# Time:                  710, PC: 80020070, RS:        29, RT:        30, IR: 8fbe0014
+# Time:                  720, PC: 80020074, RS:        29, RT:        29, IR: 27bd0018
+# Time:                  730, PC: 80020078, RS:        31, RT:         0, IR: 03e00008
+# Time:                  740, PC: 8002007c, RS:         0, RT:         0, IR: 00000000
+# ** Note: $finish    : reg_file_tb.v(106)
+#    Time: 750 ns  Iteration: 0  Instance: /reg_file_tb
