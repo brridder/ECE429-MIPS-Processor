@@ -17,6 +17,7 @@ module alu_tb;
     reg[0:15] immediate;
     reg[0:31] insn;
     wire [0:31] aluOutput;
+    wire bt;
     reg [0:31] pc;
 
     alu DUT(
@@ -25,6 +26,7 @@ module alu_tb;
         .rtData (rtData),
 	.control (control),
 	.outData (aluOutput),
+	.bt (bt),
 	.insn (insn),
 	.pc (pc)
     );
@@ -201,6 +203,7 @@ module alu_tb;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for J %h", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 	rsData = 32'h00000001;
 	rtData = 32'h00000001;
@@ -208,6 +211,7 @@ module alu_tb;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BEQ %h", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 	rsData = 32'h00000101;
 	rtData = 32'h00000001;
@@ -215,6 +219,7 @@ module alu_tb;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BEQ %h", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 		rsData = 32'h00000001;
 	rtData = 32'h00000001;
@@ -222,6 +227,7 @@ module alu_tb;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BNE %h", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 	rsData = 32'h00000101;
 	rtData = 32'h00000001;
@@ -229,18 +235,21 @@ module alu_tb;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BNE %h", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 	rsData = 32'h00000101;
 	insn = 32'h00000000 | (`BGTZ << 26) | 32'h0000beef;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BGTZ %h (taken)", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 	rsData = 32'h00000101;
 	insn = 32'h00000000 | (`BLEZ << 26) | 32'h0000beef;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BLEZ %h (not taken)", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 
 	rsData = 32'h00000101;
@@ -248,19 +257,17 @@ module alu_tb;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BLTZ %h (not taken)", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 	rsData = 32'h00000101;
 	insn = 32'h00000000 | (`REGIMM << 26) | (`BGEZ << 16) | 32'h0000beef;
 	@ (posedge clock);
 	@ (posedge clock);
 	$display("ALU output for BGEZ %h (taken)", aluOutput);
+	$display("Branch taken: (1 = yes, 0 = no) %d", bt);
 
 	
 	
-
-	
-
-
 	-> terminate_sim;
     end
 

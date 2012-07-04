@@ -101,7 +101,7 @@ module decode (
 		    control[`R_TYPE] = 1'b1;
                     control[`REG_WE] = 1;
 	            end // case: 6'b000000
-
+	       
 	            //I-TYPE
 	            6'b001001: 	//ADDIU
                 begin
@@ -167,8 +167,8 @@ module decode (
                   control[`REG_WE] = 0;
 	            end
                 default:
-	              //$display("unimplemented/incorrect instruction");  
-                  //control[`REG_WE] = 0;
+	          ;
+                  
 
             endcase // case (insn[26:31])
             

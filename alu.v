@@ -12,6 +12,7 @@ module alu (
     rtData,
     control,
     outData,
+    bt,
     insn,
     pc
 );
@@ -33,6 +34,7 @@ module alu (
 
 
     output reg [0:31] outData;
+    output reg bt; //branch taken
 
     assign opcode = insn[0:5];
     assign rt = insn[11:15];
@@ -44,6 +46,9 @@ module alu (
 
     always @(posedge clock)
       begin
+
+	  bt = 0;
+
 	if (control[`R_TYPE]) begin
 	case(funct)
 	`ADD:
@@ -106,34 +111,35 @@ module alu (
 	end else if (control[`J_TYPE]) begin
 	    case(opcode)
 	      `J:
-		outData = insn_index;
+		//outData = insn_index;
+	        bt = 1'b1;
+		 
 	      `BEQ:
 		if (rsData == rtData) begin
 		    outData = pc + $signed(offset << 2);
-		    $display("Branch Taken");
+		    bt = 1'b1;
 		end else begin
-		    $display("Branch not Taken");
+		    bt = 1'b0;
 		end
 	      `BNE:
 		if  (rsData  != rtData) begin
 		    outData = pc + $signed(offset << 2);
-		    $display("Branch Taken");
+		    bt = 1'b1;
 		end else begin
-		    $display("Branch not Taken");
+		    bt = 1'b0;
 		end
 	      `BGTZ:
 		if ($signed(rsData) > 1'b0) begin
 		    outData = pc + $signed(offset << 2);
-		    $display("Branch Taken");
+		    bt = 1'b1;
 		end else begin
-		    $display("Branch not Taken");
+		    bt = 1'b0;
 		end
 	      `BLEZ:
 		if ($signed(rsData) <= 1'b0) begin
 		    outData = pc + $signed(offset << 2);
-		    $display("Branch Taken");
 		end else begin
-		    $display("Branch not Taken");
+		    bt = 1'b0;
 		end
 
 	      `REGIMM:
@@ -141,21 +147,19 @@ module alu (
 		  `BLTZ:
 		    if ($signed(rsData) < 1'b0) begin
 			outData = pc + $signed(offset << 2);
-			$display("Branch Taken");
+			bt = 1'b1;
 		    end else begin
-			$display("Branch not Taken");
+			bt = 1'b0;
 		    end
 		  `BGEZ:
 		    if ($signed(rsData) >= 1'b0) begin
 			outData = pc + $signed(offset << 2);
-			$display("Branch Taken");
+			bt = 1'b1;
 		    end else begin
-			$display("Branch not Taken");
+			bt = 1'b0;
 		    end
 		endcase // case (rtData)
 
-
-		
 	    endcase // case (funct)
 
 	end
