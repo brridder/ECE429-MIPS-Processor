@@ -19,7 +19,6 @@ module reg_file_tb;
     
     wire[0:31] fetch_insn_decode;
     wire[0:31] fetch_pc;
-    wire[0:31] fetch_pc_out;
     reg        fetch_stall; 
    
     wire[0:31] decode_rs_data;
@@ -30,6 +29,7 @@ module reg_file_tb;
     wire[0:31] decode_write_back_data;
     wire       decode_reg_write_enable;
     wire[0:`CONTROL_REG_SIZE-1] decode_control;
+    reg decode_insn_valid;
 
     wire[0:31] srec_address;
     wire       srec_wren;
@@ -42,14 +42,11 @@ module reg_file_tb;
     reg        tb_wren;
     reg[0:31]  tb_data_in;
     wire[0:31] tb_data_out;
-        
-
     
     wire[0:31] bytes_read;
     integer    byte_count;
     integer    read_word;
-    reg[0:31]    fetch_word;
-
+    reg[0:31]  fetch_word;
     reg instruction_valid;
 
     mem_controller mcu(
@@ -66,7 +63,6 @@ module reg_file_tb;
         .insn (fetch_data_in),
         .insn_decode (fetch_data_out),
         .pc (fetch_pc),
-        .pc_out (fetch_pc_out),
         .wren (fetch_wren),
         .stall (fetch_stall)
     );
@@ -83,9 +79,9 @@ module reg_file_tb;
 
     decode U1(
         .clock (clock),
-        .insn (fetch_word),
+        .insn (fetch_data_out),
 	    .insn_valid (instruction_valid),
-        .pc (fetch_pc_out),
+        .pc (fetch_address),
         .rsData (decode_rs_data),
         .rtData (decode_rt_data),
         .rdIn (decode_rd_in),
@@ -122,14 +118,14 @@ module reg_file_tb;
     end 
 
     initial begin
-        $dumpfile("fetch_tb.vcd");
+        $dumpfile("reg_file_tb.vcd");
         $dumpvars;
     end
 
     initial begin
         @(posedge srec_done);
         @(posedge clock);
-        byte_count = bytes_read;
+        byte_count = bytes_read+4;
         tb_address = 32'h8002_0000;
         tb_wren = 1'b0;
         instruction_valid = 1'b0;
@@ -141,20 +137,25 @@ module reg_file_tb;
             end else begin
                 instruction_valid = 1'b1;
             end
-
+            decode_insn_valid = instruction_valid;
 	        read_word = tb_data_out;
             fetch_word = fetch_data_out;
 
             if (fetch_address-4 >= 32'h8002_0000) begin
-                //$display("PC: %X, Instruction: %b", fetch_address - 4, fetch_word);
-                $display("Time: %d,PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out, decode_rs_data, decode_rt_data, decode_ir_out);
+                $display("TB PC: %X, fetch PC: %X, Instruction: %x", tb_address, fetch_address, fetch_data_out);
+                $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out - 4, decode_rs_data, decode_rt_data, decode_ir_out);
                 $display("*********************");
                 $display("");
             end
             tb_address = tb_address + 4;
-            byte_count = byte_count - 4; // 27 = 0010 011
-
+            byte_count = byte_count - 4; 
         end
+        @(posedge clock);
+        $display("Time: %d,PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out , decode_rs_data, decode_rt_data, decode_ir_out);
+        tb_address = tb_address + 4;
+        @(posedge clock);
+        $display("Time: %d,PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out , decode_rs_data, decode_rt_data, decode_ir_out);
+        tb_address = tb_address + 4;
         instruction_valid = 1'b0;
         ->terminate_sim;
     end
