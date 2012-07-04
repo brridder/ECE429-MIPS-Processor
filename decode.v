@@ -78,16 +78,16 @@ module decode (
     
     always @(posedge clock)
     begin
-        if (insn_valid) begin
+        //if (insn_valid) begin
             pcOut <= pc;
-        end
+        //end
     end
 
     always @(posedge clock)
     begin
-        if (insn_valid) begin
+        //if (insn_valid) begin
             irOut <= insn;
-        end
+        //end
     end
 
     always @(posedge clock)
@@ -97,7 +97,7 @@ module decode (
             case(opcode)
 	            // R-TYPE
                 6'b000000: begin
-                    $display("R-Type instruction.");
+                    //$display("R-Type instruction.");
                     control[`REG_WE] = 1;
 	            end // case: 6'b000000
 

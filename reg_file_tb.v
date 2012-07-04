@@ -29,7 +29,6 @@ module reg_file_tb;
     wire[0:31] decode_write_back_data;
     wire       decode_reg_write_enable;
     wire[0:`CONTROL_REG_SIZE-1] decode_control;
-    reg decode_insn_valid;
 
     wire[0:31] srec_address;
     wire       srec_wren;
@@ -137,26 +136,23 @@ module reg_file_tb;
             end else begin
                 instruction_valid = 1'b1;
             end
-            decode_insn_valid = instruction_valid;
 	        read_word = tb_data_out;
             fetch_word = fetch_data_out;
 
-            if (fetch_address-4 >= 32'h8002_0000) begin
-                $display("TB PC: %X, fetch PC: %X, Instruction: %x", tb_address, fetch_address, fetch_data_out);
-                $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out - 4, decode_rs_data, decode_rt_data, decode_ir_out);
-                $display("*********************");
-                $display("");
-            end
+            $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time,
+                    decode_pc_out, decode_rs_data, decode_rt_data, decode_ir_out);
             tb_address = tb_address + 4;
             byte_count = byte_count - 4; 
         end
+
+        // The decode runs one clock cycle behind the fetch
         @(posedge clock);
-        $display("Time: %d,PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out , decode_rs_data, decode_rt_data, decode_ir_out);
+        $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time,
+                  decode_pc_out, decode_rs_data, decode_rt_data, decode_ir_out);
         tb_address = tb_address + 4;
-        @(posedge clock);
-        $display("Time: %d,PC: %X, RS:%d, RT:%d, IR: %X", $time, decode_pc_out , decode_rs_data, decode_rt_data, decode_ir_out);
-        tb_address = tb_address + 4;
+
         instruction_valid = 1'b0;
+
         ->terminate_sim;
     end
 
