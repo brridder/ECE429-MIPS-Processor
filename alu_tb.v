@@ -22,13 +22,13 @@ module alu_tb;
 
     alu DUT(
         .clock (clock),
-	.rsData (rsData),
+	    .rsData (rsData),
         .rtData (rtData),
-	.control (control),
-	.outData (aluOutput),
-	.bt (bt),
-	.insn (insn),
-	.pc (pc)
+	    .control (control),
+	    .outData (aluOutput),
+	    .bt (bt),
+	    .insn (insn),
+	    .pc (pc)
     );
 
  initial begin
