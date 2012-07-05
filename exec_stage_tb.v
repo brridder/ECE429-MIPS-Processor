@@ -55,6 +55,7 @@ module exec_stage_tb;
 
     reg[0:31] alu_insn;
     reg[0:31] alu_insn_tmp;
+    reg[0:31] alu_insn_tmp1;
     wire [0:31] alu_output;
     wire bt;
     reg[0:31] alu_pc;
@@ -172,13 +173,14 @@ module exec_stage_tb;
 
             alu_insn_tmp = alu_insn;
             alu_insn = fetch_data_out;
+            alu_insn_tmp1 = alu_insn_tmp;
             
             alu_pc = decode_pc_out;
             $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time,
                     decode_pc_out, decode_rs_data, decode_rt_data, decode_ir_out);
 
             $display("    Time: %d, INSN: %X, PC: %X, RS: %d, RT: %d, ALU_RESULT: %d",
-                     $time, alu_insn_tmp, alu_pc, alu_rs_data, alu_rt_data, alu_output);
+                     $time, alu_insn_tmp1, alu_pc, alu_rs_data, alu_rt_data, alu_output);
             tb_address = tb_address + 4;
             byte_count = byte_count - 4; 
         end
