@@ -170,8 +170,8 @@ module exec_stage_tb;
             alu_rs_data = decode_rs_data;
             alu_rt_data = decode_rt_data;
 
-            alu_insn = fetch_data_out;
             alu_insn_tmp = alu_insn;
+            alu_insn = fetch_data_out;
             
             alu_pc = decode_pc_out;
             $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time,
