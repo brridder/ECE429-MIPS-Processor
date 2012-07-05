@@ -1,0 +1,26 @@
+# Initializing memory
+# Initializing Fetch module
+# opened file srec_files/SimpleAdd.srec
+#
+# read in file
+#
+# Time:                  270, Input insn: 27bdffe8, Input PC: 80020000, Input RS:         29, Input RT:         29, ALU_RESULT:      65541
+# Time:                  280, Input insn: afbe0014, Input PC: 80020004, Input RS:         29, Input RT:         30, ALU_RESULT:      65541
+# Time:                  290, Input insn: 03a0f021, Input PC: 80020008, Input RS:         29, Input RT:          0, ALU_RESULT:         29
+# Time:                  300, Input insn: 24020003, Input PC: 8002000c, Input RS:          0, Input RT:          2, ALU_RESULT:          3
+# Time:                  310, Input insn: afc20000, Input PC: 80020010, Input RS:         30, Input RT:          2, ALU_RESULT:          3
+# Time:                  320, Input insn: 24020002, Input PC: 80020014, Input RS:          0, Input RT:          2, ALU_RESULT:          2
+# Time:                  330, Input insn: afc20004, Input PC: 80020018, Input RS:         30, Input RT:          2, ALU_RESULT:          2
+# Time:                  340, Input insn: afc00008, Input PC: 8002001c, Input RS:         30, Input RT:          0, ALU_RESULT:          2
+# Time:                  350, Input insn: 8fc30000, Input PC: 80020020, Input RS:         30, Input RT:          3, ALU_RESULT:          2
+# Time:                  360, Input insn: 8fc20004, Input PC: 80020024, Input RS:         30, Input RT:          2, ALU_RESULT:          2
+# Time:                  370, Input insn: 00621021, Input PC: 80020028, Input RS:          3, Input RT:          2, ALU_RESULT:          5
+# Time:                  380, Input insn: afc20008, Input PC: 8002002c, Input RS:         30, Input RT:          2, ALU_RESULT:          5
+# Time:                  390, Input insn: 8fc20008, Input PC: 80020030, Input RS:         30, Input RT:          2, ALU_RESULT:          5
+# Time:                  400, Input insn: 03c0e821, Input PC: 80020034, Input RS:         30, Input RT:          0, ALU_RESULT:         30
+# Time:                  410, Input insn: 8fbe0014, Input PC: 80020038, Input RS:         29, Input RT:         30, ALU_RESULT:         30
+# Time:                  420, Input insn: 27bd0018, Input PC: 8002003c, Input RS:         29, Input RT:         29, ALU_RESULT:         53
+# Time:                  430, Input insn: 03e00008, Input PC: 80020040, Input RS:         31, Input RT:          0, ALU_RESULT:         53
+# Time:                  450, Input insn: 00000000, Input PC: 80020048, Input RS:          0, Input RT:          0, ALU_RESULT:          0
+# ** Note: $finish    : exec_stage_tb.v(129)
+#    Time: 460 ns  Iteration: 0  Instance: /exec_stage_tb

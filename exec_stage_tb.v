@@ -77,7 +77,7 @@ module exec_stage_tb;
         .stall (fetch_stall)
     );
     
-    srec_parser #("srec_files/SimpleIf.srec") U0(
+    srec_parser #("srec_files/BubbleSort.srec") U0(
         .clock (clock),
         .mem_address (srec_address),
         .mem_wren (srec_wren),
@@ -205,7 +205,7 @@ module exec_stage_tb;
         @(posedge clock);
         @(posedge clock);
         $display("Time: %d, Input insn: %X, Input PC: %X, Input RS: %d, Input RT: %d, ALU_RESULT: %d",
-                     $time, alu_insn_res, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+                 $time, alu_insn_res, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
     end
     
 endmodule
