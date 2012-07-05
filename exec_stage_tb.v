@@ -197,14 +197,14 @@ module exec_stage_tb;
         while (byte_count > 0) begin
             @(posedge clock);           
 
-            $display("Time: %d, Input insn: %X, Input PC: %X, Input RS: %d, Input RT: %d, ALU_RESULT: %d",
+            $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
                      $time, alu_insn_res, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
 
         end
         // allow the last decode to run
         @(posedge clock);
         @(posedge clock);
-        $display("Time: %d, Input insn: %X, Input PC: %X, Input RS: %d, Input RT: %d, ALU_RESULT: %d",
+        $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
                  $time, alu_insn_res, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
     end
     
