@@ -95,6 +95,8 @@ module decode (
 	    if(insn_valid) begin
             control[`I_TYPE] = 1'b0;
 	    control[`R_TYPE] = 1'b0;
+	    control[`J_TYPE] = 1'b0;
+		
             case(opcode)
 	            // R-TYPE
                 6'b000000: begin
@@ -137,25 +139,31 @@ module decode (
 	            6'b000010: 	//J
                 begin
                   control[`REG_WE] = 1;
+		  control[`J_TYPE] = 1'b1;
                 end
 	            6'b000100: 	//BEQ
                 begin
                   control[`REG_WE] = 1;
+		  control[`J_TYPE] = 1'b1;
                 end
 	            6'b000101: 	//BNE
                 begin
                   control[`REG_WE] = 1;
+		  control[`J_TYPE] = 1'b1;
                 end
 	            6'b000111: 	//BGTZ
                 begin
                   control[`REG_WE] = 1;
+		  control[`J_TYPE] = 1'b1;
                 end
 	            6'b000110: 	//BLEZ
                 begin
                   control[`REG_WE] = 1;
+		  control[`J_TYPE] = 1'b1;
                 end
 	            6'b000001: //REGIMM instructions
-	            begin
+	              begin
+			  control[`J_TYPE] = 1'b1;
 		            case(rt)
 		                5'b00000:	//BLTZ
 				  ;
