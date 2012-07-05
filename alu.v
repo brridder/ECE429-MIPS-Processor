@@ -97,7 +97,11 @@ module alu (
         $display("    Alu I-Type");
 	    case(opcode)
 	      `ADDIU:
+            begin
+        $display("    Alu: ADDIU");
 		outData = rsData + $signed(immediate);
+        $display("    Alu out: %d", outData);
+            end            
 	      `SLTI:
 		if ($signed(rsData) < $signed(immediate)) begin
 		     outData = 32'h0000001;
