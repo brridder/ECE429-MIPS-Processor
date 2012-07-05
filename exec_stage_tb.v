@@ -29,7 +29,7 @@ module exec_stage_tb;
     wire[0:31] decode_ir_out;
     wire[0:31] decode_write_back_data;
     wire       decode_reg_write_enable;
-    wire[0:`CONTROL_REG_SIZE-1] decode_control;
+    wire [0:`CONTROL_REG_SIZE-1] decode_control;
 
     wire[0:31] srec_address;
     wire       srec_wren;
@@ -50,16 +50,14 @@ module exec_stage_tb;
     reg        instruction_valid;
 
     // alu
-    reg[0:31] alu_rs_data;
-    reg[0:31] alu_rt_data;
-
+    reg[0:31] alu_rs_data_res;
+    reg[0:31] alu_rt_data_res;
     reg[0:31] alu_insn;
-    reg[0:31] alu_insn_tmp;
-    reg[0:31] alu_insn_tmp1;
+    reg[0:31] alu_insn_res;
     wire [0:31] alu_output;
     wire bt;
-    reg[0:31] alu_pc;
-    
+    reg [0:31] alu_pc_res;
+    reg [0:`CONTROL_REG_SIZE-1] alu_control_res;
    
     mem_controller mcu(
         .clock (clock), 
@@ -112,7 +110,7 @@ module exec_stage_tb;
 	    .outData (alu_output),
 	    .bt (alu_bt),
 	    .insn (alu_insn),
-	    .pc (alu_pc)
+	    .pc (decode_pc_out)
     );
 
    
@@ -146,6 +144,17 @@ module exec_stage_tb;
         $dumpvars;
     end
 
+    
+    always @(posedge clock) begin
+        alu_insn <= fetch_data_out;
+        alu_insn_res <= alu_insn;        
+        alu_control_res <= decode_control;
+        alu_pc_res <= decode_pc_out;        
+        alu_rs_data_res <= decode_rs_data;
+        alu_rt_data_res <= decode_rt_data;
+    end
+    
+
     initial begin
         @(posedge srec_done);
         @(posedge clock);
@@ -154,10 +163,7 @@ module exec_stage_tb;
         tb_wren = 1'b0;
         instruction_valid = 1'b0;
         fetch_stall = 0;
-
-        //alu_control = decode_control;
-        alu_insn = fetch_data_out;        
-        alu_pc = decode_pc_out;
+        
         while (byte_count > 0) begin
             @(posedge clock);
             if ((fetch_address - 4) < 32'h8002_0000) begin
@@ -167,33 +173,39 @@ module exec_stage_tb;
             end
 	        read_word = tb_data_out;
             fetch_word = fetch_data_out;
-            
-            alu_rs_data = decode_rs_data;
-            alu_rt_data = decode_rt_data;
 
-            alu_insn_tmp = alu_insn;
-            alu_insn = fetch_data_out;
-            alu_insn_tmp1 = alu_insn_tmp;
-            
-            alu_pc = decode_pc_out;
-            $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time,
-                    decode_pc_out, decode_rs_data, decode_rt_data, decode_ir_out);
-
-            $display("    Time: %d, INSN: %X, PC: %X, RS: %d, RT: %d, ALU_RESULT: %d",
-                     $time, alu_insn_tmp1, alu_pc, alu_rs_data, alu_rt_data, alu_output);
             tb_address = tb_address + 4;
             byte_count = byte_count - 4; 
         end
 
         // The decode runs one clock cycle behind the fetch
         @(posedge clock);
-        $display("Time: %d, PC: %X, RS:%d, RT:%d, IR: %X", $time,
-                  decode_pc_out, decode_rs_data, decode_rt_data, decode_ir_out);
         tb_address = tb_address + 4;
-
         instruction_valid = 1'b0;
 
+        // allow the last alu op to run
+        @(posedge clock);
+        @(posedge clock);        
         ->terminate_sim;
     end // initial begin
 
+    // ALU Process
+    initial begin
+        @(posedge srec_done);
+        @(posedge clock);
+        
+        while (byte_count > 0) begin
+            @(posedge clock);           
+
+            $display("Time: %d, Input insn: %X, Input PC: %X, Input RS: %d, Input RT: %d, ALU_RESULT: %d",
+                     $time, alu_insn_res, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+
+        end
+        // allow the last decode to run
+        @(posedge clock);
+        @(posedge clock);
+        $display("Time: %d, Input insn: %X, Input PC: %X, Input RS: %d, Input RT: %d, ALU_RESULT: %d",
+                     $time, alu_insn_res, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+    end
+    
 endmodule

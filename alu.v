@@ -46,14 +46,9 @@ module alu (
 
     always @(posedge clock)
       begin
-      $display("    Alu insn: %X", insn);
-      $display("    Alu RS: %d", rsData);
-      $display("    Alu RT: %d", rtData);
-      $display("    Alu ct: %b", control);                    
 	  bt = 0;
 
 	if (control[`R_TYPE]) begin
-    $display("    Alu R-Type");
 	case(funct)
 	`ADD:
 	  //rd <- rs + rt
@@ -94,14 +89,9 @@ module alu (
 	  outData = ~(rsData | rtData);
 	endcase // case (funct)
 	end else if(control[`I_TYPE]) begin
-        $display("    Alu I-Type");
 	    case(opcode)
 	      `ADDIU:
-            begin
-        $display("    Alu: ADDIU");
 		outData = rsData + $signed(immediate);
-        $display("    Alu out: %d", outData);
-            end            
 	      `SLTI:
 		if ($signed(rsData) < $signed(immediate)) begin
 		     outData = 32'h0000001;
@@ -118,7 +108,6 @@ module alu (
 		outData = rsData | immediate;
 	    endcase // case (funct)
 	end else if (control[`J_TYPE]) begin
-	    $display("    Alu J-Type");
         case(opcode)
 	      `J:
 		//outData = insn_index;
