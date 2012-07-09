@@ -5,12 +5,18 @@
 //
 
 module mem_tb;
-    reg clock, wren;
+    reg clock;
+    reg wren;
     reg[0:31]   address, data;
     wire[0:31]  data_out;
 
     // Instantiate mem DUT
-    mem DUT(clock, address, wren, data, data_out);
+    mem DUT(
+        .clock (clock), 
+        .address (address), 
+        .wren (wren), 
+        .data_in (data), 
+        .data_out (data_out));
 
     // Executes only once during the initialization
     initial begin 

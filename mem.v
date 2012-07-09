@@ -69,7 +69,7 @@ module mem(
         if (address < MEM_DEPTH) begin
             data_out = data;
         end else begin
-            data_out = 32'h0000_0000;
+            data_out = 32'hdead_beef;
         end
     end
 endmodule

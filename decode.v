@@ -94,9 +94,10 @@ module decode (
       begin
 	    if(insn_valid) begin
             control[`I_TYPE] = 1'b0;
-	    control[`R_TYPE] = 1'b0;
-	    control[`J_TYPE] = 1'b0;
-		
+            control[`R_TYPE] = 1'b0;
+            control[`J_TYPE] = 1'b0;
+		    control[`MEM_WE] = 1'b0;
+
             case(opcode)
 	            // R-TYPE
                 6'b000000: begin
@@ -123,6 +124,7 @@ module decode (
 	            6'b101011: 	//SW
                 begin
                   control[`REG_WE] = 0;
+                  control[`MEM_WE] = 1'b1;
                   control[`I_TYPE] = 1'b1;
                 end
 	            6'b001111: 	//LUI

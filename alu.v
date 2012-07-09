@@ -10,10 +10,13 @@ module alu (
     clock,
     rsData,
     rtData,
+    rtDataOut,
     control,
+    control_out,
     outData,
     bt,
     insn,
+    insn_out,
     pc
 );
 
@@ -22,20 +25,24 @@ module alu (
     input wire [0:31] rtData;
 
     input wire [0:`CONTROL_REG_SIZE-1] control;
+    input wire [0:31] insn;
+    input wire [0:31] pc;
+
     wire [0:5] opcode;
     wire [5:0] funct;
     wire [0:5] sa;
     wire [0:15] immediate;
-    input wire [0:31] insn;
     wire [0:25] insn_index;
-    input wire [0:31] pc;
     wire [0:17] offset;
     wire [0:4]  rt;
 
 
-    output reg [0:31] outData;
+    output reg[0:31] outData;
     output reg bt; //branch taken
-
+    output reg[0:31] insn_out;
+    output reg[0:31] rtDataOut;
+    output reg[0:`CONTROL_REG_SIZE-1] control_out;
+    
     assign opcode = insn[0:5];
     assign rt = insn[11:15];
     assign sa = insn[20:25];
@@ -99,9 +106,9 @@ module alu (
 		     outData = 32'h0000000;
 		end
 	      `LW:
-		;
+		outData = $signed(offset) + rsData;
 	      `SW:
-		;
+		outData = $signed(offset) + rsData;
 	      `LUI:
 		outData = immediate << 16;
 	      `ORI:
@@ -164,9 +171,21 @@ module alu (
 	end
 
     end
-
-
     
+    always @(posedge clock)
+    begin
+        insn_out = insn;
+    end
+
+    always @(posedge clock)
+    begin
+        rtDataOut = rtDataOut;
+    end
+    
+    always @(posedge clock)
+    begin
+        control_out = control;
+    end
 
 endmodule
 
