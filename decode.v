@@ -92,18 +92,21 @@ module decode (
 
     always @(posedge clock)
       begin
-	    if(insn_valid) begin
-            control[`I_TYPE] = 1'b0;
-            control[`R_TYPE] = 1'b0;
-            control[`J_TYPE] = 1'b0;
-		    control[`MEM_WE] = 1'b0;
-            control[`MEM_WB] = 1'b0;            
-
+        control[`REG_WE] = 1'b0;
+        control[`I_TYPE] = 1'b0;
+        control[`R_TYPE] = 1'b0;
+        control[`J_TYPE] = 1'b0;
+        control[`MEM_WE] = 1'b0;
+        control[`MEM_WB] = 1'b0;
+        //$display("          Decode insn_valid %b", insn_valid);
+	    if(insn_valid && insn != 32'h0000_0000) begin            
+            //$display("          Decode opcode %b", opcode);
+            
             case(opcode)
 	            // R-TYPE
                 6'b000000: begin
-		    control[`R_TYPE] = 1'b1;
-                    control[`REG_WE] = 1;
+		          control[`R_TYPE] = 1'b1;
+                  control[`REG_WE] = 1;
 	            end // case: 6'b000000
 	       
 	            //I-TYPE
@@ -143,49 +146,49 @@ module decode (
 	            6'b000010: 	//J
                 begin
                   control[`REG_WE] = 1;
-		  control[`J_TYPE] = 1'b1;
+		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000100: 	//BEQ
                 begin
                   control[`REG_WE] = 1;
-		  control[`J_TYPE] = 1'b1;
+	         	  control[`J_TYPE] = 1'b1;
                 end
 	            6'b000101: 	//BNE
                 begin
                   control[`REG_WE] = 1;
-		  control[`J_TYPE] = 1'b1;
+		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000111: 	//BGTZ
                 begin
                   control[`REG_WE] = 1;
-		  control[`J_TYPE] = 1'b1;
+		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000110: 	//BLEZ
                 begin
                   control[`REG_WE] = 1;
-		  control[`J_TYPE] = 1'b1;
+		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000001: //REGIMM instructions
 	              begin
-			  control[`J_TYPE] = 1'b1;
+			        control[`J_TYPE] = 1'b1;
 		            case(rt)
 		                5'b00000:	//BLTZ
-				  ;
+				          ;
 		                5'b00001:	//BGEZ
-				  ;
+				          ;
 		                default:
 		                  $display("REGIMM not implemented");
 		            endcase // case (rt)
                   control[`REG_WE] = 0;
 	            end
                 default:
-	          ;
-                  
+	              ;                  
 
-            endcase // case (insn[26:31])
+            endcase // case (opcode)
             
     	    end // if (insn_valid = 1'b1)
-
+          //$display("          Decode insn    %X", insn);
+          //$display("          Decode control %b", control);
     end // always @ (posedge clock)
    
 endmodule

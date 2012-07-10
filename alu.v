@@ -165,7 +165,9 @@ module alu (
 		                end
 		          endcase // case (rtData)
 	        endcase // case (funct)
-	    end
+	    end else begin
+            outData = 32'h0000_0000;
+        end        
     end
     
     always @(posedge clock)

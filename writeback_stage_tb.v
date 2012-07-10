@@ -2,7 +2,7 @@
 // writeback_stage_tb.v
 //
 // Testbench for the writeback stage
-// includes all previous stage
+// includes all previous stages
 //
 
 module writeback_stage_tb;
@@ -40,7 +40,7 @@ module writeback_stage_tb;
     reg[0:31]  alu_rt_data_res;
     reg[0:31]  alu_insn;
     wire[0:31] alu_output;
-    wire bt;
+    wire 	   alu_bt;
     wire[0:31] alu_rt_data_out;
     wire[0:31] alu_insn_out;
     reg [0:31] alu_pc_res;
@@ -53,7 +53,7 @@ module writeback_stage_tb;
     wire[0:`CONTROL_REG_SIZE-1] mem_stage_control_in;
     wire[0:`CONTROL_REG_SIZE-1] mem_stage_control_out;
     wire[0:31] mem_stage_mem_data_out;
-    reg[0:`CONTROL_REG_SIZE-1] mem_stage_srec_read_control;
+    reg[0:`CONTROL_REG_SIZE-1]  mem_stage_srec_read_control;
     
 
     wire[0:31] bytes_read;
@@ -183,7 +183,8 @@ module writeback_stage_tb;
         
         while (byte_count > 0) begin
             @ (posedge clock);
-            if ((fetch_address - 4) < 32'h8002_0000) begin
+            //$display("Fetch Address %X", fetch_address);
+            if (fetch_address < 32'h8002_0000) begin
                 instruction_valid = 1'b0;
             end else begin
                 instruction_valid = 1'b1;
