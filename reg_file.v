@@ -52,7 +52,9 @@ module reg_file (
             rtOut <= registers[rtIn];
             //$display("time: %d Rs %d, RT: %d", $time, registers[rsIn], registers[rtIn]);
         join
-        registers[rdIn] = writeBackData;
+        if (regWriteEnable) begin
+            registers[rdIn] = writeBackData;
+        end        
     end // always @(posedge clock) 
 
 endmodule

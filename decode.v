@@ -17,7 +17,7 @@ module decode (
     irOut,
     writeBackData,
     regWriteEnable,
-    control
+    control               
 );
 
     input wire[0:31] insn;
@@ -97,6 +97,7 @@ module decode (
             control[`R_TYPE] = 1'b0;
             control[`J_TYPE] = 1'b0;
 		    control[`MEM_WE] = 1'b0;
+            control[`MEM_WB] = 1'b0;            
 
             case(opcode)
 	            // R-TYPE
@@ -120,6 +121,7 @@ module decode (
                 begin
                   control[`REG_WE] = 1;
                   control[`I_TYPE] = 1'b1;
+                  control[`MEM_WB] = 1'b1;                    
                 end
 	            6'b101011: 	//SW
                 begin

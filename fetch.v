@@ -23,16 +23,14 @@ module fetch (
     output reg wren; // indicates whether the fetch stage is performing a read or write to the main memory. Should always be asserted to a read for the fetch stage.
     reg[2:0] stage;
 
-    assign insn_decode = insn;
-    initial
-    begin
+    assign insn_decode = stall ? 32'h0000_0000 : insn;
+    initial begin
         $display("Initializing Fetch module"); 
         pc = 32'h8002_0000;
         wren = 1'b0;
     end
 
-    always @(posedge clock)
-    begin
+    always @(posedge clock) begin
         if (stall != 1'b1) begin
             address <= pc;
             pc <= pc +4;

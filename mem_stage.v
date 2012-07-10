@@ -42,7 +42,7 @@ module mem_stage(
 
     always @(posedge clock)
     begin
-        $display("TIME: %d, address %X, wren %b", $time, address, wren_mem);
+        //$display("TIME: %d, address %X, wren %b", $time, address, wren_mem);
         address_out = address;
     end
     

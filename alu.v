@@ -54,7 +54,7 @@ module alu (
     always @(posedge clock)
       begin
 	  bt = 0;
-
+          $display("ALU insn %X", insn);          
 	if (control[`R_TYPE]) begin
 	case(funct)
 	`ADD:
