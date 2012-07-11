@@ -250,11 +250,13 @@ module writeback_stage_tb;
         @ (posedge clock);
         
         while (byte_count > 0) begin
-            @ (posedge clock);           
-            $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
+            @ (posedge clock); 
+            if (cycle_count == 2) begin
+		$display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
                      $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
-	    $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
-	    $display("decode rd_out: %d", decode_rd_out);
+	    end
+	 //   $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
+	 //   $display("decode rd_out: %d", decode_rd_out);
         end
         // allow the last decode to run
         @ (posedge clock);

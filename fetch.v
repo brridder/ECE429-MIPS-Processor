@@ -13,9 +13,13 @@ module fetch (
     stall
 );
 
-    input wire clock; // Clock signal for module. Make module sensitive to the positive edge of the clock
-    input wire[0:31] insn; // this receives the instruction word from the main memory associated with the supplied PC
-    input wire stall; // When asserted, the fetch effectively does a NOP. Data supplied to any of the outputs do not change, and the PC is not incremented by 4.
+    input wire clock; // Clock signal for module. 
+    // Make module sensitive to the positive edge of the clock
+    input wire[0:31] insn; // this receives the instruction 
+    // word from the main memory associated with the supplied PC
+    input wire stall; // When asserted, the fetch effectively
+    //  does a NOP. Data supplied to any of the outputs do not change, 
+    // and the PC is not incremented by 4.
 
     output reg[0:31] address; // Output address supplied to the address input of the main memory. This signal transmits the PC for the instruction we are going to fetch
     output wire[0:31] insn_decode; // This transmits the instruction received from the main memory from insn
