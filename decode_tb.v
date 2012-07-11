@@ -11,14 +11,14 @@ module decode_tb;
     reg [0:31] pc;   
 
     wire[0:1] insn_type;
-    wire[5:0] opcode;
-    wire[4:0] rs;
-    wire[4:0] rt;
-    wire[4:0] rd;
-    wire[4:0] shift_amount;
-    wire[5:0] funct;
-    wire[15:0] immediate;
-    wire[25:0] j_address;
+    wire[0:5] opcode;
+    wire[0:4] rs;
+    wire[0:4] rt;
+    wire[0:4] rd;
+    wire[0:4] shift_amount;
+    wire[0:5] funct;
+    wire[0:15] immediate;
+    wire[0:25] j_address;
 
     decode DUT(
         .clock (clock),

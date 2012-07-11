@@ -24,12 +24,12 @@ module exec_stage_tb;
    
     wire[0:31] decode_rs_data;
     wire[0:31] decode_rt_data;
-    wire[4:0]  decode_rd_in;
+    wire[0:4]  decode_rd_in;
     wire[0:31] decode_pc_out;
     wire[0:31] decode_ir_out;
     wire[0:31] decode_write_back_data;
     wire       decode_reg_write_enable;
-    wire [0:`CONTROL_REG_SIZE-1] decode_control;
+    wire[0:`CONTROL_REG_SIZE-1] decode_control;
 
     wire[0:31] srec_address;
     wire       srec_wren;
@@ -54,10 +54,10 @@ module exec_stage_tb;
     reg[0:31] alu_rt_data_res;
     reg[0:31] alu_insn;
     reg[0:31] alu_insn_res;
-    wire [0:31] alu_output;
+    wire[0:31] alu_output;
     wire bt;
-    reg [0:31] alu_pc_res;
-    reg [0:`CONTROL_REG_SIZE-1] alu_control_res;
+    reg[0:31] alu_pc_res;
+    reg[0:`CONTROL_REG_SIZE-1] alu_control_res;
    
     mem_controller mcu(
         .clock (clock), 

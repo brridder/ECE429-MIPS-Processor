@@ -23,14 +23,14 @@ module reg_file (
     parameter NUM_REGS = 32;
 
     input wire clock;
-    input wire[4:0] rdIn;
+    input wire[0:4] rdIn;
     input wire[0:31] writeBackData;
 
     output reg[0:31] rsOut;
     output reg[0:31] rtOut;
 
-    input wire[4:0] rsIn;
-    input wire[4:0] rtIn;
+    input wire[0:4] rsIn;
+    input wire[0:4] rtIn;
     input wire regWriteEnable;
 
     reg[0:REG_WIDTH-1] registers[0:NUM_REGS-1];

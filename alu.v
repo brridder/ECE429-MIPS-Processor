@@ -23,21 +23,21 @@ module alu (
 );
 
     input wire clock;
-    input wire [0:31] rsData;
-    input wire [0:31] rtData;
+    input wire[0:31] rsData;
+    input wire[0:31] rtData;
 
-    input wire [0:`CONTROL_REG_SIZE-1] control;
-    input wire [0:31] insn;
-    input wire [0:31] pc;
-    input wire [0:4]  rdIn;
+    input wire[0:`CONTROL_REG_SIZE-1] control;
+    input wire[0:31] insn;
+    input wire[0:31] pc;
+    input wire[0:4]  rdIn;
 
-    wire [0:5] opcode;
-    wire [5:0] funct;
-    wire [0:5] sa;
-    wire [0:15] immediate;
-    wire [0:25] insn_index;
-    wire [0:17] offset;
-    wire [0:4]  rt;
+    wire[0:5] opcode;
+    wire[5:0] funct;
+    wire[0:5] sa;
+    wire[0:15] immediate;
+    wire[0:25] insn_index;
+    wire[0:17] offset;
+    wire[0:4]  rt;
 
 
     output reg[0:31] outData;

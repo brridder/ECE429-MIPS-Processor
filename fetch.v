@@ -21,7 +21,6 @@ module fetch (
     output wire[0:31] insn_decode; // This transmits the instruction received from the main memory from insn
     output reg[0:31] pc; // 
     output reg wren; // indicates whether the fetch stage is performing a read or write to the main memory. Should always be asserted to a read for the fetch stage.
-    reg[2:0] stage;
 
     assign insn_decode = stall ? 32'h0000_0000 : insn;
     initial begin

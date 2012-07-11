@@ -24,7 +24,7 @@ module mem_stage_tb;
    
     wire[0:31] decode_rs_data;
     wire[0:31] decode_rt_data;
-    wire[4:0]  decode_rd_in;
+    wire[0:4]  decode_rd_in;
     wire[0:31] decode_pc_out;
     wire[0:31] decode_ir_out;
     wire[0:31] decode_write_back_data;

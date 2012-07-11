@@ -25,7 +25,7 @@ module decode (
     input wire[0:31] pc;
     input wire clock;
     input wire insn_valid;
-    input wire[4:0] rdIn;
+    input wire[0:4] rdIn;
     //input wire[0:31] rdDataIn;               
     input wire[0:31] writeBackData;
     input wire regWriteEnable;
@@ -35,20 +35,20 @@ module decode (
     output reg[0:31] pcOut; 
     output reg[0:31] irOut;
     output reg[0:`CONTROL_REG_SIZE-1] control;    
-    output reg[4:0] rdOut;    
+    output reg[0:4] rdOut;    
     
     reg[0:1] insn_type;
     
     wire[0:5] opcode;
-    wire[4:0] rs;
-    wire[4:0] rt;
-    wire[4:0] rd;
-    wire[4:0] shift_amount;
-    wire[5:0] funct;
-    wire[15:0] immediate;
-    wire[25:0] j_address;
-    wire[4:0] base;
-    wire[15:0] offset;
+    wire[0:4] rs;
+    wire[0:4] rt;
+    wire[0:4] rd;
+    wire[0:4] shift_amount;
+    wire[0:5] funct;
+    wire[0:15] immediate;
+    wire[0:25] j_address;
+    wire[0:4] base;
+    wire[0:15] offset;
   
     reg_file REGISTER_FILE(
         .clock (clock),
