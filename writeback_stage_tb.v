@@ -29,7 +29,7 @@ module writeback_stage_tb;
    
     wire[0:31] decode_rs_data;
     wire[0:31] decode_rt_data;
-    wire[4:0]  decode_rd_in;
+    wire[0:4]  decode_rd_in;
     wire[0:31] decode_pc_out;
     wire[0:31] decode_ir_out;
     wire[0:31] decode_write_back_data;
@@ -244,7 +244,7 @@ module writeback_stage_tb;
         ->terminate_sim;
     end // initial begin
 
-    // ALU process    
+    // Debug process for outputting values    
     initial begin
         @ (posedge srec_done);
         @ (posedge clock);
@@ -253,6 +253,8 @@ module writeback_stage_tb;
             @ (posedge clock);           
             $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
                      $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+	    $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
+	    $display("decode rd_out: %d", decode_rd_out);
         end
         // allow the last decode to run
         @ (posedge clock);

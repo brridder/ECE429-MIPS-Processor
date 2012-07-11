@@ -57,7 +57,12 @@ module alu (
 
     always @(posedge clock)
     begin
-	rdOut <= rdIn;
+	if (control[`I_TYPE]) begin
+	    rdOut <= rt;
+	end
+	else begin
+	    rdOut <= rdIn;
+	end
     end
 	
     always @(posedge clock)
