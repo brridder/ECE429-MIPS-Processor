@@ -58,7 +58,7 @@ module mem_stage(
     
     always @(posedge clock)
     begin
-        data_out = data_in;
+        data_out = address;
     end
     
     always @(posedge clock)
