@@ -52,6 +52,8 @@ module writeback_stage_tb;
     wire[0:31] mem_stage_data_out;
     wire[0:`CONTROL_REG_SIZE-1] mem_stage_control_in;
     wire[0:`CONTROL_REG_SIZE-1] mem_stage_control_out;
+    wire[0:31] 		mem_stage_insn;
+    wire[0:31] 		mem_stage_insn_out;		
     wire[0:31] mem_stage_mem_data_out;
     reg[0:`CONTROL_REG_SIZE-1]  mem_stage_srec_read_control;
     
@@ -128,7 +130,15 @@ module writeback_stage_tb;
         .data_out (mem_stage_data_out),
         .control (mem_stage_control_in),
         .control_out (mem_stage_control_out)
-    );
+      );
+
+    writeback_stage wbs(
+	.clock (clock),
+	.memDataIn (mem_stage_data_out),
+	.control (mem_stage_control_out),
+	.rdOut (decode_rd_in),
+	.regWriteEnable (decode_reg_write_enable)
+     	
      
     assign mcu_address = srec_done ? fetch_address : srec_address;
     assign mcu_wren = srec_done ? fetch_wren : srec_wren;
