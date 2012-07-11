@@ -8,7 +8,6 @@
 
 module writeback_stage(
     clock,
-    insn,
     rdIn,
     rdDataIn,
     memDataIn,
@@ -19,14 +18,13 @@ module writeback_stage(
 );
 
     input wire clock;
-    input wire[0:31] insn;
-    input wire[0:31] rdIn;
+    input wire[0:4] rdIn;
+    input wire[0:31] rdDataIn;
     input wire[0:31] memDataIn;
     input wire[0:`CONTROL_REG_SIZE-1] control;
   
     output reg[4:0] rdOut;
     output reg		 regWriteEnable;
-    output reg[0:31] insnOut;
     output reg[0:31] writeBackData;
     
     always @(posedge clock)
@@ -39,11 +37,6 @@ module writeback_stage(
             writeBackData <= rdDataIn;            
         end  
         rdOut <= rdIn;        
-    end
-    
-    always @(posedge clock)
-    begin
-        insnOut <= insn;
     end
     
 endmodule

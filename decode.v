@@ -26,7 +26,7 @@ module decode (
     input wire clock;
     input wire insn_valid;
     input wire[4:0] rdIn;
-    input wire[0:31] rdDataIn;               
+    //input wire[0:31] rdDataIn;               
     input wire[0:31] writeBackData;
     input wire regWriteEnable;
 
