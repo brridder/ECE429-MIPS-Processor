@@ -111,7 +111,7 @@ module alu (
 	    end else if(control[`I_TYPE]) begin
 	        case(opcode)
 	            `ADDIU:
-		          outData = rsData + $signed(immediate);
+		          outData = $signed(rsData) + $signed(immediate);
 	            `SLTI:
 		          if ($signed(rsData) < $signed(immediate)) begin
 		              outData = 32'h0000001;
