@@ -17,7 +17,8 @@ module decode (
     irOut,
     writeBackData,
     regWriteEnable,
-    control               
+    control,
+    rdOut   
 );
 
     input wire[0:31] insn;
@@ -25,6 +26,7 @@ module decode (
     input wire clock;
     input wire insn_valid;
     input wire[4:0] rdIn;
+    input wire[0:31] rdDataIn;               
     input wire[0:31] writeBackData;
     input wire regWriteEnable;
 
@@ -33,7 +35,8 @@ module decode (
     output reg[0:31] pcOut; 
     output reg[0:31] irOut;
     output reg[0:`CONTROL_REG_SIZE-1] control;    
-
+    output reg[4:0] rdOut;    
+    
     reg[0:1] insn_type;
     
     wire[0:5] opcode;
@@ -80,14 +83,10 @@ module decode (
     begin
         //if (insn_valid) begin
             pcOut <= pc;
-        //end
-    end
-
-    always @(posedge clock)
-    begin
-        //if (insn_valid) begin
             irOut <= insn;
+            rdOut <= rd;
         //end
+        
     end
 
     always @(posedge clock)
