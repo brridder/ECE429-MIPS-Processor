@@ -17,7 +17,9 @@ module alu (
     bt,
     insn,
     insn_out,
-    pc
+    pc,
+    rdIn,
+    rdOut
 );
 
     input wire clock;
@@ -27,6 +29,7 @@ module alu (
     input wire [0:`CONTROL_REG_SIZE-1] control;
     input wire [0:31] insn;
     input wire [0:31] pc;
+    input wire [0:4]  rdIn;
 
     wire [0:5] opcode;
     wire [5:0] funct;
@@ -42,6 +45,7 @@ module alu (
     output reg[0:31] insn_out;
     output reg[0:31] rtDataOut;
     output reg[0:`CONTROL_REG_SIZE-1] control_out;
+    output reg[0:4] rdOut;
     
     assign opcode = insn[0:5];
     assign rt = insn[11:15];
@@ -51,6 +55,11 @@ module alu (
     assign offset = insn[16:31];
     assign insn_index = insn[6:31];
 
+    always @(posedge clock)
+    begin
+	rdOut <= rdIn;
+    end
+	
     always @(posedge clock)
     begin
 	    bt = 0;          
