@@ -23,8 +23,8 @@ module writeback_stage(
     input wire[0:31] memDataIn;
     input wire[0:`CONTROL_REG_SIZE-1] control;
   
-    output reg[4:0] rdOut;
-    output reg		 regWriteEnable;
+    output reg[0:4] rdOut;
+    output reg regWriteEnable;
     output reg[0:31] writeBackData;
     
     always @(posedge clock)
