@@ -18,7 +18,8 @@ module mem_controller(
     address,
     wren,
     data_in,
-    data_out
+    data_out,
+    print_stack
 );
 
 // Parameters
@@ -32,7 +33,7 @@ input wire clock;
 input wire[0:31] address;
 input wire wren;
 input wire[0:31] data_in;
-
+input wire print_stack;
 // Outputs 
 output wire[0:31] data_out;
 
@@ -45,7 +46,8 @@ mem memory0(
     .address (mem_address),
     .wren (wren),
     .data_in (data_in),
-    .data_out (data_out)
+    .data_out (data_out),
+    .print_stack(print_stack)
     );
 
 endmodule

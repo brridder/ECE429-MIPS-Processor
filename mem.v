@@ -14,7 +14,8 @@ module mem(
 	   address,
 	   wren,
        data_in,
-	   data_out 
+	   data_out,
+       print_stack
 );
 
     // Parameters
@@ -26,7 +27,7 @@ module mem(
     input wire[0:31]    address;
     input wire          wren;
     input wire[0:31]    data_in;
-
+    input               print_stack;
     // Outputs
     output reg[0:31]    data_out;
 
@@ -45,8 +46,9 @@ module mem(
     end
 
     // Data is put on a mux to only set on the reads
-    assign data = !wren ? {ram[address], ram[address+1], 
-                           ram[address+2], ram[address+3]} : 32'h0000_0000;
+    //assign data = !wren ? {ram[address], ram[address+1], 
+                           //ram[address+2], ram[address+3]} : 32'h0000_0000;
+    assign data =  {ram[address], ram[address+1],ram[address+2], ram[address+3]};
 
     // Rising edge, load the data
     always @(posedge clock)
@@ -59,6 +61,15 @@ module mem(
                 ram[address+2] <= data_in[16:23];         
                 ram[address+3] <= data_in[24:31];         
                 join
+            end
+        end
+    end
+
+    always @(posedge clock)
+    begin
+        if (print_stack) begin
+            for (i = 512; i > 512 -32; i=i-4) begin
+                $display("Stack at %X, data = %X", i, {ram[i],ram[i+1],ram[i+2],ram[i+3]});
             end
         end
     end

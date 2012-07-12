@@ -5,7 +5,7 @@
 `ifndef _control_vh_
 `define _control_vh_
 
-`define CONTROL_REG_SIZE 6
+`define CONTROL_REG_SIZE 7
 
 `define REG_WE 0
 `define I_TYPE 1
@@ -13,6 +13,6 @@
 `define J_TYPE 3
 `define MEM_WE 4
 `define MEM_WB 5
-
+`define MEM_READ 6
 
 `endif 

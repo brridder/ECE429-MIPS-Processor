@@ -18,7 +18,8 @@ module decode (
     writeBackData,
     regWriteEnable,
     control,
-    rdOut   
+    rdOut,
+    dumpRegs
 );
 
     input wire[0:31] insn;
@@ -29,6 +30,7 @@ module decode (
     //input wire[0:31] rdDataIn;               
     input wire[0:31] writeBackData;
     input wire regWriteEnable;
+    input wire dumpRegs;
 
     output wire[0:31] rsData; // Latched in the reg_file module
     output wire[0:31] rtData;
@@ -58,7 +60,8 @@ module decode (
         .rtIn (rt),
         .rdIn (rdIn),
         .regWriteEnable (regWriteEnable),
-        .writeBackData (writeBackData)
+        .writeBackData (writeBackData),
+        .dumpRegs(dumpRegs)
     );
 
     // Instruction types
@@ -97,6 +100,7 @@ module decode (
         control[`J_TYPE] = 1'b0;
         control[`MEM_WE] = 1'b0;
         control[`MEM_WB] = 1'b0;
+        control[`MEM_READ] = 1'b0;
         //$display("          Decode insn_valid %b", insn_valid);
 	    if(insn_valid && insn != 32'h0000_0000) begin            
             //$display("          Decode opcode %b", opcode);
@@ -124,6 +128,7 @@ module decode (
                   control[`REG_WE] = 1;
                   control[`I_TYPE] = 1'b1;
                   control[`MEM_WB] = 1'b1;                    
+                  control[`MEM_READ] = 1'b1;
                 end
 	            6'b101011: 	//SW
                 begin
@@ -144,27 +149,27 @@ module decode (
 	            //J-TYPE
 	            6'b000010: 	//J
                 begin
-                  control[`REG_WE] = 1;
+                  control[`REG_WE] = 0;
 		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000100: 	//BEQ
                 begin
-                  control[`REG_WE] = 1;
+                  control[`REG_WE] = 0;
 	         	  control[`J_TYPE] = 1'b1;
                 end
 	            6'b000101: 	//BNE
                 begin
-                  control[`REG_WE] = 1;
+                  control[`REG_WE] = 0;
 		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000111: 	//BGTZ
                 begin
-                  control[`REG_WE] = 1;
+                  control[`REG_WE] = 0;
 		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000110: 	//BLEZ
                 begin
-                  control[`REG_WE] = 1;
+                  control[`REG_WE] = 0;
 		          control[`J_TYPE] = 1'b1;
                 end
 	            6'b000001: //REGIMM instructions

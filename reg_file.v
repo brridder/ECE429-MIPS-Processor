@@ -16,7 +16,8 @@ module reg_file (
     rtIn,
     rdIn,
     regWriteEnable,
-    writeBackData
+    writeBackData,
+    dumpRegs
 );
    
     parameter REG_WIDTH = 32;
@@ -25,6 +26,7 @@ module reg_file (
     input wire clock;
     input wire[0:4] rdIn;
     input wire[0:31] writeBackData;
+    input wire dumpRegs; // Display the contents of the registers. For testing and report purposes.
 
     output reg[0:31] rsOut;
     output reg[0:31] rtOut;
@@ -42,8 +44,18 @@ module reg_file (
     begin
         for (i = 0; i < NUM_REGS; i = i + 1) begin
             registers[i] = i;
-        end // for ()
+        end 
+        registers[29] <= 32'h80020200;
     end // initial
+
+    always @(posedge clock)
+    begin
+        if (dumpRegs) begin
+            for (i = 0; i < NUM_REGS; i = i + 1) begin
+                $display("Register %d, value: %X", i, registers[i]);
+            end
+        end
+    end
 
     always @(posedge clock)
     begin

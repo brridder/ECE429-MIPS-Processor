@@ -191,7 +191,7 @@ module alu (
 
     always @(posedge clock)
     begin
-        rtDataOut = rtDataOut;
+        rtDataOut = rtData;
     end
     
     always @(posedge clock)

@@ -40,20 +40,21 @@ module writeback_stage_tb;
     wire[0:31] decode_ir_out;
     wire[0:31] decode_write_back_data;
     wire       decode_reg_write_enable;
-    wire [0:`CONTROL_REG_SIZE-1] decode_control;
-    wire [0:4] decode_rd_out;
+    wire[0:`CONTROL_REG_SIZE-1] decode_control;
+    wire[0:4]  decode_rd_out;
+    reg        decode_dump_regs; 
 
     reg[0:31]  alu_rs_data_res;
     reg[0:31]  alu_rt_data_res;
     reg[0:31]  alu_insn;
     wire[0:31] alu_output;
-    wire 	   alu_bt;
+    wire        alu_bt;
     wire[0:31] alu_rt_data_out;
     wire[0:31] alu_insn_out;
     reg [0:31] alu_pc_res;
     wire[0:`CONTROL_REG_SIZE-1] alu_control_out;
-    wire [0:4] alu_rd_in;
-    wire [0:4] alu_rd_out;
+    wire[0:4] alu_rd_in;
+    wire[0:4] alu_rd_out;
    
     wire[0:31] mem_stage_address;
     wire[0:31] mem_stage_address_out;
@@ -61,15 +62,14 @@ module writeback_stage_tb;
     wire[0:31] mem_stage_data_out;
     wire[0:`CONTROL_REG_SIZE-1] mem_stage_control_in;
     wire[0:`CONTROL_REG_SIZE-1] mem_stage_control_out;
-    wire[0:31] 		mem_stage_insn;
-    wire[0:31] 		mem_stage_insn_out;		
+    wire[0:31] mem_stage_insn;
+    wire[0:31] mem_stage_insn_out;        
     wire[0:31] mem_stage_mem_data_out;
     reg[0:`CONTROL_REG_SIZE-1]  mem_stage_srec_read_control;
-    wire [0:4] mem_stage_rd_in;
-    wire [0:4] mem_stage_rd_out;
+    wire[0:4] mem_stage_rd_in;
+    wire[0:4] mem_stage_rd_out;
 
     reg[0:7]  cycle_count;
-
 
     wire[0:31] bytes_read;
     integer    byte_count;
@@ -110,7 +110,7 @@ module writeback_stage_tb;
     decode U1(
         .clock (clock),
         .insn (fetch_data_out),
-	    .insn_valid (instruction_valid),
+        .insn_valid (instruction_valid),
         .pc (fetch_address),
         .rsData (decode_rs_data),
         .rtData (decode_rt_data),
@@ -120,18 +120,19 @@ module writeback_stage_tb;
         .writeBackData (decode_write_back_data),
         .regWriteEnable (decode_reg_write_enable),
         .control (decode_control),
-    	.rdOut (decode_rd_out)
+    	.rdOut (decode_rd_out),
+        .dumpRegs (decode_dump_regs)
     );
 
     alu alu(
         .clock (clock),
-	    .rsData (decode_rs_data),
+        .rsData (decode_rs_data),
         .rtData (decode_rt_data),
-	    .control (decode_control),
+        .control (decode_control),
         .control_out (alu_control_out),
-	    .outData (alu_output),
-	    .bt (alu_bt),
-	    .insn (decode_ir_out),
+        .outData (alu_output),
+        .bt (alu_bt),
+        .insn (decode_ir_out),
         .insn_out(alu_insn_out),
         .rtDataOut(alu_rt_data_out),
      	.pc (decode_pc_out),
@@ -148,21 +149,21 @@ module writeback_stage_tb;
         .data_out (mem_stage_data_out),
         .control (mem_stage_control_in),
         .control_out (mem_stage_control_out),
-	    .rdIn (alu_rd_out),
-	    .rdOut (mem_stage_rd_out)
+        .rdIn (alu_rd_out),
+        .rdOut (mem_stage_rd_out)
     );
 
     writeback_stage wbs(
-	    .clock (clock),
-	    .rdIn (mem_stage_rd_out),
-	    .rdDataIn (mem_stage_data_out),
-	    .memDataIn (mem_stage_mem_data_out),
-	    .control (mem_stage_control_out),
-    	.rdOut (decode_rd_in),
-    	.regWriteEnable (decode_reg_write_enable),
-    	.writeBackData (decode_write_back_data)
+        .clock (clock),
+        .rdIn (mem_stage_rd_out),
+        .rdDataIn (mem_stage_data_out),
+        .memDataIn (mem_stage_mem_data_out),
+        .control (mem_stage_control_out),
+        .rdOut (decode_rd_in),
+        .regWriteEnable (decode_reg_write_enable),
+        .writeBackData (decode_write_back_data)
     );
-     	
+         
      
     assign mcu_address = srec_done ? fetch_address : srec_address;
     assign mcu_wren = srec_done ? fetch_wren : srec_wren;
@@ -218,11 +219,13 @@ module writeback_stage_tb;
     // ensuring that there is only one insn in the pipeline at a time
     initial begin
         @ (posedge srec_done);
+        decode_dump_regs = 1'b1;
         @ (posedge clock);
+        decode_dump_regs = 1'b0;
         byte_count = bytes_read + 4;
         instruction_valid = 1'b0;
         fetch_stall = 0;
-	    cycle_count = 0;
+        cycle_count = 0;
         
         while (byte_count > 0) begin
             @ (posedge clock);
@@ -244,12 +247,9 @@ module writeback_stage_tb;
 	        end
 	        else begin
 		        cycle_count <= cycle_count + 1;
-	        end
+            end
 
-	        
             //$display("ALU address out: %X", alu_output);
-            //$display("Time: %d, mem_stage address_out %x, mem_stage data_out %x, mem_stage mem_data_out, %x control out %x", 
-            //         $time, mem_stage_address_out, mem_stage_data_out, mem_stage_mem_data_out, mem_stage_control_out);
         end
 
         // The decode runs one clock cycle behind the fetch
@@ -268,17 +268,27 @@ module writeback_stage_tb;
         while (byte_count > 0) begin
             @ (posedge clock); 
             if (cycle_count == 2) begin
-		        $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
+		        $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %x, Inp RT: %x, ALU_RESULT: %x",
                          $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+                $display("Memory stage data in : %X", alu_rt_data_out);
 	        end
+            if (cycle_count == 3) begin
+                $display("Time: %d, memory location: %X, memory write enabled: %b,  memory data: %X", $time, mem_stage_address_out,mem_stage_control_out[`MEM_WE],mem_stage_mem_data_out);
+            end
+            if (cycle_count == 4) begin
+                //$display("");
+            end
 	        //   $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
 	        //   $display("decode rd_out: %d", decode_rd_out);
         end
         // allow the last decode to run
         @ (posedge clock);
+        decode_dump_regs = 1'b1;
         @ (posedge clock);
+        decode_dump_regs = 1'b0;
         $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
                  $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+
     end
     
 endmodule
