@@ -68,7 +68,7 @@ module writeback_stage_tb;
     reg[0:`CONTROL_REG_SIZE-1]  mem_stage_srec_read_control;
     wire[0:4] mem_stage_rd_in;
     wire[0:4] mem_stage_rd_out;
-
+    reg mem_stage_print_stack;
     reg[0:7]  cycle_count;
 
     wire[0:31] bytes_read;
@@ -77,7 +77,7 @@ module writeback_stage_tb;
 
     event      terminate_sim;
 
-    srec_parser #("srec_files/SimpleIf.srec") U0(
+    srec_parser #("srec_files/BubbleSort.srec") U0(
         .clock (clock),
         .mem_address (srec_address),
         .mem_wren (srec_wren),
@@ -150,7 +150,8 @@ module writeback_stage_tb;
         .control (mem_stage_control_in),
         .control_out (mem_stage_control_out),
         .rdIn (alu_rd_out),
-        .rdOut (mem_stage_rd_out)
+        .rdOut (mem_stage_rd_out),
+        .print_stack (mem_stage_print_stack)
     );
 
     writeback_stage wbs(
@@ -274,8 +275,10 @@ module writeback_stage_tb;
 	        end
             if (cycle_count == 3) begin
                 $display("Time: %d, memory location: %X, memory write enabled: %b,  memory data: %X", $time, mem_stage_address_out,mem_stage_control_out[`MEM_WE],mem_stage_mem_data_out);
+                mem_stage_print_stack = 1;
             end
             if (cycle_count == 4) begin
+                mem_stage_print_stack = 0;
                 //$display("");
             end
 	        //   $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);

@@ -18,7 +18,9 @@ module mem_stage(
     control_out,
 
     rdIn,
-    rdOut
+    rdOut,
+
+    print_stack
 );
 
     input wire clock; 
@@ -26,6 +28,7 @@ module mem_stage(
     input wire[0:31] data_in;
     input wire[0:`CONTROL_REG_SIZE-1] control;
     input wire[0:4] rdIn;
+    input wire print_stack;
 
     output reg[0:31] address_out;
     output reg[0:31] data_out;
@@ -33,7 +36,6 @@ module mem_stage(
     output reg[0:`CONTROL_REG_SIZE-1] control_out;
     output reg[0:4] rdOut;
     wire[0:31] mcu_data_out;
-    reg print_stack;
     wire wren_mem;
 
     assign wren_mem = control[`MEM_WE];
@@ -47,10 +49,6 @@ module mem_stage(
         .print_stack (print_stack) // Debugging
     );
     
-    initial begin
-        print_stack = 1;
-    end
-
     always @(posedge clock)
     begin
 	  rdOut <= rdIn;
@@ -63,14 +61,14 @@ module mem_stage(
 
     always @(posedge clock)
     begin
-        $display("TIME: %d, address %X, wren %b,mem_data_in %X,  mem_data out : %X", $time, address, wren_mem,data_in, mem_data_out);
+        //$display("TIME: %d, address %X, wren %b,mem_data_in %X,  mem_data out : %X", $time, address, wren_mem,data_in, mem_data_out);
         address_out = address;
     end
     
     always @(posedge clock)
     begin
         data_out = address;
-        $display("TIME: %d, data_out = %X", $time, data_out);
+        //$display("TIME: %d, data_out = %X", $time, data_out);
     end
     
     always @(posedge clock)

@@ -68,7 +68,7 @@ module mem(
     always @(posedge clock)
     begin
         if (print_stack) begin
-            for (i = 512; i > 512 -32; i=i-4) begin
+            for (i = 512; i > 512 - 56; i=i-4) begin
                 $display("Stack at %X, data = %X", i, {ram[i],ram[i+1],ram[i+2],ram[i+3]});
             end
         end
