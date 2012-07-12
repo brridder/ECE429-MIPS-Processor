@@ -129,10 +129,10 @@ module alu (
 	        endcase // case (funct)
 	    end else if (control[`J_TYPE]) begin
             case(opcode)
-	            `J:
-		          //outData = insn_index;
-	              bt = 1'b1;
-		        
+	            `J: begin                  
+		            outData = ((pc + 4) & 32'hfc00_0000) | (insn_index << 2); 
+	                bt = 1'b1;
+                end                
 	            `BEQ:
 		          if (rsData == rtData) begin
 		              outData = pc + $signed(offset << 2);

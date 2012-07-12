@@ -26,6 +26,12 @@ module writeback_stage_tb;
     wire[0:31] fetch_insn_decode;
     wire[0:31] fetch_pc;
     reg        fetch_stall; 
+    reg[0:31]  fetch_pc_in;
+    reg        fetch_jump;
+    reg[0:31]  fetch_pc_in_buff_0;
+    reg        fetch_jump_buff_0;
+    reg[0:31]  fetch_pc_in_buff_1;
+    reg        fetch_jump_buff_1;    
    
     wire[0:31] decode_rs_data;
     wire[0:31] decode_rt_data;
@@ -96,7 +102,9 @@ module writeback_stage_tb;
         .insn_decode (fetch_data_out),
         .pc (fetch_pc),
         .wren (fetch_wren),
-        .stall (fetch_stall)
+        .stall (fetch_stall),
+        .pcIn (fetch_pc_in),
+        .jump (fetch_jump)
     );
     
     decode U1(
@@ -112,7 +120,7 @@ module writeback_stage_tb;
         .writeBackData (decode_write_back_data),
         .regWriteEnable (decode_reg_write_enable),
         .control (decode_control),
-	.rdOut (decode_rd_out)
+    	.rdOut (decode_rd_out)
     );
 
     alu alu(
@@ -126,9 +134,9 @@ module writeback_stage_tb;
 	    .insn (decode_ir_out),
         .insn_out(alu_insn_out),
         .rtDataOut(alu_rt_data_out),
-	.pc (decode_pc_out),
-	.rdIn (decode_rd_out),
-	.rdOut (alu_rd_out)
+     	.pc (decode_pc_out),
+	    .rdIn (decode_rd_out),
+	    .rdOut (alu_rd_out)
     );
 
     mem_stage DUT(
@@ -140,19 +148,19 @@ module writeback_stage_tb;
         .data_out (mem_stage_data_out),
         .control (mem_stage_control_in),
         .control_out (mem_stage_control_out),
-	.rdIn (alu_rd_out),
-	.rdOut (mem_stage_rd_out)
-      );
+	    .rdIn (alu_rd_out),
+	    .rdOut (mem_stage_rd_out)
+    );
 
     writeback_stage wbs(
-	.clock (clock),
-	.rdIn (mem_stage_rd_out),
-	.rdDataIn (mem_stage_data_out),
-	.memDataIn (mem_stage_mem_data_out),
-	.control (mem_stage_control_out),
-	.rdOut (decode_rd_in),
-	.regWriteEnable (decode_reg_write_enable),
-	.writeBackData (decode_write_back_data)
+	    .clock (clock),
+	    .rdIn (mem_stage_rd_out),
+	    .rdDataIn (mem_stage_data_out),
+	    .memDataIn (mem_stage_mem_data_out),
+	    .control (mem_stage_control_out),
+    	.rdOut (decode_rd_in),
+    	.regWriteEnable (decode_reg_write_enable),
+    	.writeBackData (decode_write_back_data)
     );
      	
      
@@ -197,16 +205,24 @@ module writeback_stage_tb;
         alu_pc_res <= decode_pc_out;        
         alu_rs_data_res <= decode_rs_data;
         alu_rt_data_res <= decode_rt_data;
+        // a little ugly... is there a better way of doing it?
+        fetch_pc_in_buff_0 <= alu_output;
+        fetch_jump_buff_0 <= alu_bt;
+        fetch_pc_in_buff_1 <= fetch_pc_in_buff_0;        
+        fetch_jump_buff_1 <= fetch_jump_buff_0;        
+        fetch_pc_in <= fetch_pc_in_buff_1;
+        fetch_jump <= fetch_jump_buff_1;        
     end
 
-    // Fetch and Decode process
+    // Process to control the length of execution and
+    // ensuring that there is only one insn in the pipeline at a time
     initial begin
         @ (posedge srec_done);
         @ (posedge clock);
         byte_count = bytes_read + 4;
         instruction_valid = 1'b0;
         fetch_stall = 0;
-	cycle_count = 0;
+	    cycle_count = 0;
         
         while (byte_count > 0) begin
             @ (posedge clock);
@@ -216,21 +232,21 @@ module writeback_stage_tb;
             end else begin
                 instruction_valid = 1'b1;
             end
-            // debug
+            
+            // stall the pipline such that there is only one insn at a time in it
             if (cycle_count == 0) begin
                 byte_count = byte_count - 4;
                 fetch_stall <= 1;                
             end
+	        if (cycle_count == 4) begin
+		        cycle_count <= 0;
+		        fetch_stall <= 0;
+	        end
+	        else begin
+		        cycle_count <= cycle_count + 1;
+	        end
 
-	    if (cycle_count == 4) begin
-		cycle_count <= 0;
-		fetch_stall <= 0;
-	    end
-	    else begin
-		cycle_count <= cycle_count + 1;
-	    end
-
-	    
+	        
             //$display("ALU address out: %X", alu_output);
             //$display("Time: %d, mem_stage address_out %x, mem_stage data_out %x, mem_stage mem_data_out, %x control out %x", 
             //         $time, mem_stage_address_out, mem_stage_data_out, mem_stage_mem_data_out, mem_stage_control_out);
@@ -252,11 +268,11 @@ module writeback_stage_tb;
         while (byte_count > 0) begin
             @ (posedge clock); 
             if (cycle_count == 2) begin
-		$display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
-                     $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
-	    end
-	 //   $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
-	 //   $display("decode rd_out: %d", decode_rd_out);
+		        $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
+                         $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+	        end
+	        //   $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
+	        //   $display("decode rd_out: %d", decode_rd_out);
         end
         // allow the last decode to run
         @ (posedge clock);

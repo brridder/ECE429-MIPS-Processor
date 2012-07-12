@@ -10,7 +10,9 @@ module fetch (
     insn_decode,
     pc,
     wren,
-    stall
+    stall,
+    pcIn,
+    jump
 );
 
     input wire clock; // Clock signal for module. 
@@ -20,7 +22,10 @@ module fetch (
     input wire stall; // When asserted, the fetch effectively
     //  does a NOP. Data supplied to any of the outputs do not change, 
     // and the PC is not incremented by 4.
-
+    input wire[0:31] pcIn; // this receives a pc to do branches
+    input wire       jump; // this indicates if pcIn should be used
+    // to read the next insn, i.e. do a jump
+    
     output reg[0:31] address; // Output address supplied to the address input of the main memory. This signal transmits the PC for the instruction we are going to fetch
     output wire[0:31] insn_decode; // This transmits the instruction received from the main memory from insn
     output reg[0:31] pc; // 
@@ -34,9 +39,20 @@ module fetch (
     end
 
     always @(posedge clock) begin
+/* -----\/----- EXCLUDED -----\/-----
+        $display("     Fetch jump %b", jump);
+        $display("     Fetch pcIn %X", pcIn);
+        $display("     Fetch stll %b", stall); 
+ -----/\----- EXCLUDED -----/\----- */
         if (stall != 1'b1) begin
-            address <= pc;
-            pc <= pc +4;
+            if (jump) begin
+                address <= pcIn;                
+                pc <= pcIn + 4;
+            end
+            else begin
+                address <= pc;
+                pc <= pc + 4;
+            end            
         end
     end
 
