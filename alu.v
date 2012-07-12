@@ -135,28 +135,28 @@ module alu (
                 end                
 	            `BEQ:
 		          if (rsData == rtData) begin
-		              outData = pc + $signed(offset << 2);
+		              outData = $signed(pc + 4) + $signed(offset << 2);
 		              bt = 1'b1;
 		          end else begin
 		              bt = 1'b0;
 		          end
 	            `BNE:
 		          if  (rsData  != rtData) begin
-		              outData = pc + $signed(offset << 2);
+		              outData = $signed(pc + 4) + $signed(offset << 2);
 		              bt = 1'b1;
 		          end else begin
 		              bt = 1'b0;
 		          end
 	            `BGTZ:
 		          if ($signed(rsData) > 1'b0) begin
-		              outData = pc + $signed(offset << 2);
+		              outData = $signed(pc + 4) + $signed(offset << 2);
 		              bt = 1'b1;
 		          end else begin
 		              bt = 1'b0;
 		          end
 	            `BLEZ:
 		          if ($signed(rsData) <= 1'b0) begin
-		              outData = pc + $signed(offset << 2);
+		              outData = $signed(pc + 4) + $signed(offset << 2);
 		          end else begin
 		              bt = 1'b0;
 		          end
@@ -165,14 +165,14 @@ module alu (
 		          case(rt)
 		              `BLTZ:
 		                if ($signed(rsData) < 1'b0) begin
-			                outData = pc + $signed(offset << 2);
+			                outData = $signed(pc + 4) + $signed(offset << 2);
 			                bt = 1'b1;
 		                end else begin
 			                bt = 1'b0;
 		                end
 		              `BGEZ:
 		                if ($signed(rsData) >= 1'b0) begin
-			                outData = pc + $signed(offset << 2);
+			                outData = $signed(pc + 4) + $signed(offset << 2);
 			                bt = 1'b1;
 		                end else begin
 			                bt = 1'b0;
