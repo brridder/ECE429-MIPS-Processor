@@ -1,0 +1,73 @@
+# opened file srec_files/SimpleAdd.srec
+# 
+# Initializing memory
+# Initializing Fetch module
+# Initializing memory
+# read in file 
+# 
+# initial register file state
+# Register           0, value: 00000000
+# Register           1, value: 00000001
+# Register           2, value: 00000002
+# Register           3, value: 00000003
+# Register           4, value: 00000004
+# Register           5, value: 00000005
+# Register           6, value: 00000006
+# Register           7, value: 00000007
+# Register           8, value: 00000008
+# Register           9, value: 00000009
+# Register          10, value: 0000000a
+# Register          11, value: 0000000b
+# Register          12, value: 0000000c
+# Register          13, value: 0000000d
+# Register          14, value: 0000000e
+# Register          15, value: 0000000f
+# Register          16, value: 00000010
+# Register          17, value: 00000011
+# Register          18, value: 00000012
+# Register          19, value: 00000013
+# Register          20, value: 00000014
+# Register          21, value: 00000015
+# Register          22, value: 00000016
+# Register          23, value: 00000017
+# Register          24, value: 00000018
+# Register          25, value: 00000019
+# Register          26, value: 0000001a
+# Register          27, value: 0000001b
+# Register          28, value: 0000001c
+# Register          29, value: 80020200
+# Register          30, value: 0000001e
+# Register          31, value: 0000001f
+# final register file state
+# Register           0, value: 00000000
+# Register           1, value: 00000001
+# Register           2, value: 00000005 +++
+# Register           3, value: 00000003 +++
+# Register           4, value: 00000004
+# Register           5, value: 00000005
+# Register           6, value: 00000006
+# Register           7, value: 00000007
+# Register           8, value: 00000008
+# Register           9, value: 00000009
+# Register          10, value: 0000000a
+# Register          11, value: 0000000b
+# Register          12, value: 0000000c
+# Register          13, value: 0000000d
+# Register          14, value: 0000000e
+# Register          15, value: 0000000f
+# Register          16, value: 00000010
+# Register          17, value: 00000011
+# Register          18, value: 00000012
+# Register          19, value: 00000013
+# Register          20, value: 00000014
+# Register          21, value: 00000015
+# Register          22, value: 00000016
+# Register          23, value: 00000017
+# Register          24, value: 00000018
+# Register          25, value: 00000019
+# Register          26, value: 0000001a
+# Register          27, value: 0000001b
+# Register          28, value: 0000001c
+# Register          29, value: 80020200
+# Register          30, value: 0000001e
+# Register          31, value: 0000001f
