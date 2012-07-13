@@ -54,24 +54,24 @@
 # Register          31, value: 0000001f
 # final register file state
 # Stack at 00000200, data = 00000000
-# Stack at 000001fc, data = 0000001f
-# Stack at 000001f8, data = 0000001e
-# Stack at 000001f4, data = 00000078
-# Stack at 000001f0, data = 00000063
-# Stack at 000001ec, data = 0000000c
-# Stack at 000001e8, data = 0000000a
-# Stack at 000001e4, data = 00000009
-# Stack at 000001e0, data = 00000004
-# Stack at 000001dc, data = 00000003
-# Stack at 000001d8, data = 00000001
+# Stack at 000001fc, data = 0000001f +++
+# Stack at 000001f8, data = 0000001e +++
+# Stack at 000001f4, data = 00000078 +++
+# Stack at 000001f0, data = 00000063 +++
+# Stack at 000001ec, data = 0000000c +++
+# Stack at 000001e8, data = 0000000a +++
+# Stack at 000001e4, data = 00000009 +++
+# Stack at 000001e0, data = 00000004 +++
+# Stack at 000001dc, data = 00000003 +++
+# Stack at 000001d8, data = 00000001 +++
 # Stack at 000001d4, data = 00000000
 # Stack at 000001d0, data = 00000000
 # Stack at 000001cc, data = 00000008
 # Register           0, value: 00000000
 # Register           1, value: 00000001
-# Register           2, value: 00000000
-# Register           3, value: 00000008
-# Register           4, value: 800201d8
+# Register           2, value: 00000000 +++
+# Register           3, value: 00000008 +++
+# Register           4, value: 800201d8 +++
 # Register           5, value: 00000008
 # Register           6, value: 00000006
 # Register           7, value: 00000007
