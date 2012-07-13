@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{listings}
+\usepackage{inconsolata}
+\usepackage{fullpage}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.5,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\begin{document}
+\lstset{language=verilog,
+        frame=single,
+        breaklines=true,
+        stepnumber=2,
+        basicstyle=\ttfamily\itshape,
+        columns=fullflexible,
+        showspaces=false,
+        showstringspaces=false,
+        keywordstyle=\bf\color{blue},
+        commentstyle=\color{dkgreen}
+        }
+\input{title.tex}
+\section{Output}
+Bubble sort is not working correctly. There is an issue with the sorting part
+of it most likely tied to the SLL operation. We ran out of time to debug this
+issue as the assembly is difficult to work through line by line.
+
+\lstset{caption={Bubble Sort Output}, label=bubblesort_out}
+\lstinputlisting{bubblesort.txt}
+%
+\lstset{caption={Simple Add Output}, label=simpleadd_out}
+\lstinputlisting{simpleadd.txt}
+%%
+\lstset{caption={Simple If Output}, label=simpleif_out}
+\lstinputlisting{simpleif.txt}
+%
+\lstset{caption={Sum Array Output}, label=sumarray_out}
+\lstinputlisting{sumarray.txt}
+%
+
+\section{Source Code}
+
+\lstset{caption={Memory Stage Module}, label=memstagesrc}
+\lstinputlisting{../../mem_stage.v}
+
+\lstset{caption={Writeback Module}, label=writebacksrc}
+\lstinputlisting{../../writeback_stage.v}
+
+\lstset{caption={Writeback Module Test Bench}, label=writebacktbsrc}
+\lstinputlisting{../../writeback_stage_tb.v}
+
+
+\end{document}
