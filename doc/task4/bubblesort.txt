@@ -59,11 +59,11 @@
 # Stack at 000001f4, data = 00000078
 # Stack at 000001f0, data = 00000063
 # Stack at 000001ec, data = 0000000c
-# Stack at 000001e8, data = 0000000c
-# Stack at 000001e4, data = 0000000c
-# Stack at 000001e0, data = 0000000c
-# Stack at 000001dc, data = 0000000c
-# Stack at 000001d8, data = 0000000c
+# Stack at 000001e8, data = 0000000a
+# Stack at 000001e4, data = 00000009
+# Stack at 000001e0, data = 00000004
+# Stack at 000001dc, data = 00000003
+# Stack at 000001d8, data = 00000001
 # Stack at 000001d4, data = 00000000
 # Stack at 000001d0, data = 00000000
 # Stack at 000001cc, data = 00000008

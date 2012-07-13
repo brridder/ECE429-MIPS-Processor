@@ -49,7 +49,7 @@ module alu (
     
     assign opcode = insn[0:5];
     assign rt = insn[11:15];
-    assign sa = insn[20:25];
+    assign sa = insn[21:25];
     assign funct = insn[26:31];
     assign immediate = insn[16:31];
     assign offset = insn[16:31];
@@ -78,12 +78,12 @@ module alu (
 	              outData = rsData + rtData;
 	            `ADDU:
 	              //todo: do we need to treat unsigned specially?
-	              outData = $unsigned(rsData) + $unsigned(rtData);
+	              outData = $signed(rsData) + $signed(rtData);
 	            `SUB:
-	              outData = rsData - rtData;
+	              outData = $signed(rsData) - $signed(rtData);
 	            `SUBU:
 	              //todo: correct way to do unsigned?
-	              outData = $unsigned(rsData) - $unsigned(rtData);
+	              outData = $signed(rsData) - $signed(rtData);
 	            `SLT: // rd <- 1 if rs < rt; else rd <- 0
 	              if ($signed(rsData) < $signed(rtData)) begin
 	                  outData = 32'h00000001;
@@ -96,8 +96,9 @@ module alu (
 	              end else begin 
 	                  outData = 32'h00000000; 
 	              end
-	            `SLL:
-	              outData = rtData << sa;
+	            `SLL: begin
+	              outData = rtData << $unsigned(sa);
+		      end
 	            `SRL:
 	              outData = rtData >> sa;
 	            `SRA:

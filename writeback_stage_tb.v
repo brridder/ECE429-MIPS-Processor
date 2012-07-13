@@ -234,8 +234,11 @@ module writeback_stage_tb;
     initial begin
         @ (posedge srec_done);
         decode_dump_regs = 1'b1;
+	mem_stage_print_stack = 1'b1;
+	$display("initial register file state");
         @ (posedge clock);
         decode_dump_regs = 1'b0;
+	mem_stage_print_stack = 1'b0;
         byte_count = bytes_read + 4;
         instruction_valid = 1'b0;
         fetch_stall = 0;
@@ -283,18 +286,16 @@ module writeback_stage_tb;
         while (terminate_signal == 0) begin
             @ (posedge clock);
             if (cycle_count == 2) begin
-		//decode_dump_regs = 1'b1;
-		        $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %x, Inp RT: %x, ALU_RESULT: %x",
-                         $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
-                $display("Memory stage data in : %X", alu_rt_data_out);
+		  //      $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %x, Inp RT: %x, ALU_RESULT: %x",
+                  //       $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+                //$display("Memory stage data in : %X", alu_rt_data_out);
 	        end
             if (cycle_count == 3) begin
-                $display("Time: %d, memory location: %X, memory write enabled: %b,  memory data: %X", $time, mem_stage_address_out,mem_stage_control_out[`MEM_WE],mem_stage_mem_data_out);
-                //mem_stage_print_stack = 1;
+               // $display("Time: %d, memory location: %X, memory write enabled: %b,  memory data: %X", $time, mem_stage_address_out,mem_stage_control_out[`MEM_WE],mem_stage_mem_data_out);
+               // mem_stage_print_stack = 1;
             end
             if (cycle_count == 4) begin
                 mem_stage_print_stack = 0;
-                //$display("");
             end
 
 	        //   $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
@@ -302,11 +303,14 @@ module writeback_stage_tb;
         end
         // allow the last decode to run
         @ (posedge clock);
+	$display("final register file state");
         decode_dump_regs = 1'b1;
+	mem_stage_print_stack = 1'b1;
         @ (posedge clock);
         decode_dump_regs = 1'b0;
-        $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
-                 $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
+	mem_stage_print_stack = 1'b0;
+       // $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %d, Inp RT: %d, ALU_RESULT: %d",
+       //          $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
 
     end
     
