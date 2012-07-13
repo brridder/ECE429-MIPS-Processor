@@ -5,6 +5,8 @@
 // includes all previous stages
 //
 
+`include "alu_func.vh"
+
 module writeback_stage_tb;
     reg clock;
 
@@ -74,10 +76,11 @@ module writeback_stage_tb;
     wire[0:31] bytes_read;
     integer    byte_count;
     reg        instruction_valid;
+    reg        terminate_signal;
 
     event      terminate_sim;
 
-    srec_parser #("srec_files/SimpleIf.srec") U0(
+    srec_parser #("srec_files/SimpleAdd.srec") U0(
         .clock (clock),
         .mem_address (srec_address),
         .mem_wren (srec_wren),
@@ -187,12 +190,20 @@ module writeback_stage_tb;
         instruction_valid = 1'b0;
         mem_stage_srec_read_control = 0;
         mem_stage_srec_read_control[`MEM_WE] = 1;
+	terminate_signal = 1'b0;
     end
 
     // Clock process
     always begin
         #5 clock = !clock;
-    end 
+    end
+
+    //wait for the last JR RA
+    always @ (posedge clock) begin
+	if (alu_insn_out[26:31] == `JR && alu_output == 31) begin
+	    terminate_signal <= 1;
+	end
+    end
 
     // Debug dump
     initial begin
@@ -226,8 +237,9 @@ module writeback_stage_tb;
         instruction_valid = 1'b0;
         fetch_stall = 0;
         cycle_count = 0;
-        
-        while (byte_count > 0) begin
+
+	//byte count breaks when we have loops ...
+        while (terminate_signal == 0) begin
             @ (posedge clock);
             //$display("Fetch Address %X", fetch_address);
             if (fetch_address < 32'h8002_0000) begin
@@ -265,9 +277,10 @@ module writeback_stage_tb;
         @ (posedge srec_done);
         @ (posedge clock);
         
-        while (byte_count > 0) begin
-            @ (posedge clock); 
+        while (terminate_signal == 0) begin
+            @ (posedge clock);
             if (cycle_count == 2) begin
+		//decode_dump_regs = 1'b1;
 		        $display("Time: %d, Inp insn: %X, Inp PC: %X, Inp RS: %x, Inp RT: %x, ALU_RESULT: %x",
                          $time, alu_insn_out, alu_pc_res, alu_rs_data_res, alu_rt_data_res, alu_output);
                 $display("Memory stage data in : %X", alu_rt_data_out);
@@ -278,6 +291,7 @@ module writeback_stage_tb;
             if (cycle_count == 4) begin
                 //$display("");
             end
+
 	        //   $display("WB register: %d WB data: %d", decode_rd_in, decode_write_back_data);
 	        //   $display("decode rd_out: %d", decode_rd_out);
         end

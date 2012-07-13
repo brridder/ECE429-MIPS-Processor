@@ -48,7 +48,7 @@ module mem_stage(
     );
     
     initial begin
-        print_stack = 1;
+        print_stack = 0;
     end
 
     always @(posedge clock)
@@ -63,14 +63,21 @@ module mem_stage(
 
     always @(posedge clock)
     begin
-        $display("TIME: %d, address %X, wren %b,mem_data_in %X,  mem_data out : %X", $time, address, wren_mem,data_in, mem_data_out);
+        //$display("TIME: %d, address %X, wren %b,mem_data_in %X,  mem_data out : %X", $time, address, wren_mem,data_in, mem_data_out);
         address_out = address;
     end
     
     always @(posedge clock)
-    begin
-        data_out = address;
-        $display("TIME: %d, data_out = %X", $time, data_out);
+      //hehehe I know this is terrible but it was a really easy way to
+      //implement JAL ...
+      begin
+	if (control[`LINK] == 1) begin
+	    data_out <= data_in;
+	end
+	else begin
+            data_out <= address;
+	end
+        //$display("TIME: %d, data_out = %X", $time, data_out);
     end
     
     always @(posedge clock)

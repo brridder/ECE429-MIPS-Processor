@@ -101,6 +101,7 @@ module decode (
         control[`MEM_WE] = 1'b0;
         control[`MEM_WB] = 1'b0;
         control[`MEM_READ] = 1'b0;
+	  control[`LINK] = 1'b0;
         //$display("          Decode insn_valid %b", insn_valid);
 	    if(insn_valid && insn != 32'h0000_0000) begin            
             //$display("          Decode opcode %b", opcode);
@@ -109,7 +110,13 @@ module decode (
 	            // R-TYPE
                 6'b000000: begin
 		          control[`R_TYPE] = 1'b1;
-                  control[`REG_WE] = 1;
+		    if(funct == `JR) begin
+			  control[`REG_WE] = 0;
+		    end
+		    else
+		    begin
+			control[`REG_WE] = 1;
+		    end
 	            end // case: 6'b000000
 	       
 	            //I-TYPE
@@ -143,15 +150,21 @@ module decode (
                 end
 	            6'b001101: 	//ORI
                 begin
-                  control[`REG_WE] = 1;
+                  control[`REG_WE] = 1'b1;
                   control[`I_TYPE] = 1'b1;
+		    control[`LINK] = 1'b1;
                 end
 	            //J-TYPE
 	            6'b000010: 	//J
                 begin
                   control[`REG_WE] = 0;
-		          control[`J_TYPE] = 1'b1;
+		  control[`J_TYPE] = 1'b1;
                 end
+	        `JAL: begin
+		  control[`REG_WE] = 1;
+		  control[`J_TYPE] = 1'b1;
+		    control[`LINK] = 1'b1;
+		 end
 	            6'b000100: 	//BEQ
                 begin
                   control[`REG_WE] = 0;

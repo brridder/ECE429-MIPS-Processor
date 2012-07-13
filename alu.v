@@ -60,6 +60,9 @@ module alu (
 	if (control[`I_TYPE]) begin
 	    rdOut <= rt;
 	end
+	else if(opcode == `JAL) begin
+	    rdOut = 31;
+	end
 	else begin
 	    rdOut <= rdIn;
 	end
@@ -107,6 +110,11 @@ module alu (
 	              outData = rsData ^ rtData;
 	            `NOR:
 	              outData = ~(rsData | rtData);
+		    `JR: begin
+			outData = rsData;
+			bt = 1'b1;
+		      end
+		      
 	        endcase // case (funct)
 	    end else if(control[`I_TYPE]) begin
 	        case(opcode)
@@ -132,7 +140,13 @@ module alu (
 	            `J: begin                  
 		            outData = ((pc + 4) & 32'hfc00_0000) | (insn_index << 2); 
 	                bt = 1'b1;
-                end                
+                end               
+
+	            `JAL: begin
+			outData = ((pc + 4) & 32'hfc00_0000) | (insn_index << 2);
+			bt = 1'b1;
+		    end
+
 	            `BEQ:
 		          if (rsData == rtData) begin
 		              outData = $signed(pc + 4) + $signed(offset << 2);
@@ -191,7 +205,12 @@ module alu (
 
     always @(posedge clock)
     begin
+      if (opcode == `JAL) begin
+    	  rtDataOut = (pc + 8);
+      end
+      else begin
         rtDataOut = rtData;
+      end
     end
     
     always @(posedge clock)

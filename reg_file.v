@@ -59,6 +59,13 @@ module reg_file (
 
     always @(posedge clock)
     begin
+	if(rdIn == 0 && regWriteEnable == 1) begin
+	    $display("+============ TRYING TO WRITE TO $ZERO ===========+");
+	end
+    end
+
+    always @(posedge clock)
+    begin
         fork
             rsOut <= registers[rsIn];
             rtOut <= registers[rtIn];
