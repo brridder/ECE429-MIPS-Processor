@@ -136,7 +136,7 @@ module writeback_stage_tb;
         .control (decode_control),
         .control_out (alu_control_out),
         .outData (alu_output),
-        .bt (alu_bt),
+        .branchTaken (alu_bt),
         .insn (decode_ir_out),
         .insn_out(alu_insn_out),
         .rtDataOut(alu_rt_data_out),

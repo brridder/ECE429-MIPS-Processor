@@ -14,7 +14,7 @@ module alu (
     control,
     control_out,
     outData,
-    bt,
+    branchTaken,
     insn,
     insn_out,
     pc,
@@ -41,7 +41,7 @@ module alu (
 
 
     output reg[0:31] outData;
-    output reg bt; //branch taken
+    output reg branchTaken; //branch taken
     output reg[0:31] insn_out;
     output reg[0:31] rtDataOut;
     output reg[0:`CONTROL_REG_SIZE-1] control_out;
@@ -70,7 +70,7 @@ module alu (
 	
     always @(posedge clock)
     begin
-	    bt = 0;          
+	    branchTaken = 0;          
 	    if (control[`R_TYPE]) begin
 	        case(funct)
 	            `ADD:
@@ -113,7 +113,7 @@ module alu (
 	              outData = ~(rsData | rtData);
 		    `JR: begin
 			outData = rsData;
-			bt = 1'b1;
+			branchTaken = 1'b1;
 		      end
 		      
 	        endcase // case (funct)
@@ -140,40 +140,40 @@ module alu (
             case(opcode)
 	            `J: begin                  
 		            outData = ((pc + 4) & 32'hfc00_0000) | (insn_index << 2); 
-	                bt = 1'b1;
+	                branchTaken= 1'b1;
                 end               
 
 	            `JAL: begin
 			outData = ((pc + 4) & 32'hfc00_0000) | (insn_index << 2);
-			bt = 1'b1;
+			branchTaken= 1'b1;
 		    end
 
 	            `BEQ:
 		          if (rsData == rtData) begin
 		              outData = $signed(pc + 4) + $signed(offset << 2);
-		              bt = 1'b1;
+		              branchTaken= 1'b1;
 		          end else begin
-		              bt = 1'b0;
+		              branchTaken= 1'b0;
 		          end
 	            `BNE:
 		          if  (rsData  != rtData) begin
 		              outData = $signed(pc + 4) + $signed(offset << 2);
-		              bt = 1'b1;
+		              branchTaken = 1'b1;
 		          end else begin
-		              bt = 1'b0;
+		              branchTaken = 1'b0;
 		          end
 	            `BGTZ:
 		          if ($signed(rsData) > 1'b0) begin
 		              outData = $signed(pc + 4) + $signed(offset << 2);
-		              bt = 1'b1;
+		              branchTaken= 1'b1;
 		          end else begin
-		              bt = 1'b0;
+		              branchTaken = 1'b0;
 		          end
 	            `BLEZ:
 		          if ($signed(rsData) <= 1'b0) begin
 		              outData = $signed(pc + 4) + $signed(offset << 2);
 		          end else begin
-		              bt = 1'b0;
+		              branchTaken = 1'b0;
 		          end
 
 	            `REGIMM:
@@ -181,16 +181,16 @@ module alu (
 		              `BLTZ:
 		                if ($signed(rsData) < 1'b0) begin
 			                outData = $signed(pc + 4) + $signed(offset << 2);
-			                bt = 1'b1;
+			                branchTaken = 1'b1;
 		                end else begin
-			                bt = 1'b0;
+			                branchTaken = 1'b0;
 		                end
 		              `BGEZ:
 		                if ($signed(rsData) >= 1'b0) begin
 			                outData = $signed(pc + 4) + $signed(offset << 2);
-			                bt = 1'b1;
+			                branchTaken = 1'b1;
 		                end else begin
-			                bt = 1'b0;
+			                branchTaken = 1'b0;
 		                end
 		          endcase // case (rtData)
 	        endcase // case (funct)
