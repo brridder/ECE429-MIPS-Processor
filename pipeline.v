@@ -7,10 +7,12 @@
 `include "alu_func.vh"
 `include "control.vh"
 
-module pipeline;
-
-    reg clock;
-
+module pipeline(
+    clock,
+    program_done
+);
+    input wire clock;
+    output reg program_done;
     // SREC parser
     wire[0:31]  srec_address;
     wire        srec_wren;
@@ -33,26 +35,24 @@ module pipeline;
     wire[0:31]  fetch_insn_decode;
     wire[0:31]  fetch_pc_out;
     reg         fetch_stall;
-    reg[0:31]   fetch_pc_in;
-    reg         fetch_jump;
-
+    
+    wire[0:4]   fetch_rd_out;
     // Decode Stage
-    wire[0:31]  decode_insn;
-    wire        decode_insn_valid;
+    reg         decode_insn_valid;
+    wire[0:31]  decode_insn_in;
     wire[0:31]  decode_rs_data;
     wire[0:31]  decode_rt_data;
     wire[0:4]   decode_rd_in;
+    wire[0:4]   decode_rd_out;
     wire[0:31]  decode_pc_out;
     wire[0:31]  decode_ir_out;
     wire[0:31]  decode_write_back_data;
     wire        decode_reg_write_enable;
     wire[0:`CONTROL_REG_SIZE-1] decode_control;
-    wire[0:4]   decode_rd_out;
     reg         decode_dump_regs;
 
     // Execute Stage
     wire[0:31]  alu_rt_data_out;
-    //wire[0:31]  alu_control_out;
     wire[0:31]  alu_out_data;
     wire[0:`CONTROL_REG_SIZE-1] alu_control_out;
     wire        alu_branch_taken;
@@ -70,8 +70,11 @@ module pipeline;
     wire[0:4]   mem_stage_rd_out;
     reg         mem_stage_print_stack;
     reg[0:`CONTROL_REG_SIZE-1]  mem_stage_srec_read_control;
-    
+   
 
+    reg[0:31]   nop_insn;
+    reg         pipeline_stall;
+    reg         instruction_valid; 
     // SREC Parser
     srec_parser #("srec_files/SimpleAdd.srec") srec0(
         .clock          (clock),
@@ -101,19 +104,19 @@ module pipeline;
         .pc             (fetch_pc_out),
         .wren           (fetch_wren),
         .stall          (fetch_stall),
-        .pcIn           (fetch_pc_in),
-        .jump           (fetch_jump)
+        .pcIn           (alu_out_data),
+        .jump           (alu_branch_taken)
     );
     
     // Decode Stage
     decode decode0(
         .clock          (clock),
-        .insn           (decode_insn),
+        .insn           (decode_insn_in),
         .insn_valid     (decode_insn_valid),
         .pc             (fetch_address),
         .rsData         (decode_rs_data),
         .rtData         (decode_rt_data),
-        .rdIn           (decode_rd_in),
+        .rdIn           (mem_stage_rd_out),
         .pcOut          (decode_pc_out),
         .irOut          (decode_ir_out),
         .writeBackData  (decode_write_back_data),
@@ -175,12 +178,55 @@ module pipeline;
     assign mem_stage_address = srec_done ? alu_out_data : srec_address;
     assign mem_stage_data_in = srec_done ? alu_rt_data_out : srec_data_in;
     assign mem_stage_control_in = srec_done ? alu_control_out : mem_stage_srec_read_control;
+   
+    assign decode_insn_in = pipeline_stall ? nop_insn : fetch_data_out;
     
+    assign fetch_rd_out = fetch_data_out[16:20];
+
     initial begin
-        clock = 1;
         fetch_stall = 1;
         mem_stage_srec_read_control = 0;
         mem_stage_srec_read_control[`MEM_WE] = 1;
+        nop_insn = 32'b0000_0000;
     end
+
+    initial begin
+        @(srec_done)
+        decode_dump_regs <= 1;
+        @(posedge clock)
+        decode_dump_regs <= 0;
+    end
+
+    always begin
+        if (alu_insn_out[26:31] == `JR && alu_out_data== 31) begin
+           program_done <= 1;
+           decode_dump_regs <= 0;
+        end
+    end
+    
+    always begin
+        if (fetch_address < 32'h8002_0000) begin
+            instruction_valid = 1'b0;
+            pipeline_stall = 1'b1;
+        end else begin 
+            instruction_valid = 1'b1;
+            pipeline_stall = 1'b0;
+        end
+    end
+
+    always begin
+        //alu_rd_out mem_stage_rd_out decode_rd_out, decode_rd_in
+        if (fetch_rd_out == decode_rd_out ||
+            fetch_rd_out == alu_rd_out ||
+            fetch_rd_out == mem_stage_rd_out ||
+            fetch_rd_out == decode_rd_in) begin
+            pipeline_stall = 1'b1; 
+            fetch_stall = 1'b1;
+        end else begin
+            pipeline_stall = 1'b0;
+            fetch_stall = 1'b0;
+        end
+    end
+
 
 endmodule

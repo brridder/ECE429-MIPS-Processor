@@ -101,7 +101,7 @@ module decode (
         control[`MEM_WE] = 1'b0;
         control[`MEM_WB] = 1'b0;
         control[`MEM_READ] = 1'b0;
-	  control[`LINK] = 1'b0;
+	    control[`LINK] = 1'b0;
         //$display("          Decode insn_valid %b", insn_valid);
 	    if(insn_valid && insn != 32'h0000_0000) begin            
             //$display("          Decode opcode %b", opcode);
