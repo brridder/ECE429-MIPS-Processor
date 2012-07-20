@@ -11,6 +11,7 @@ module pipeline(
     clock,
     program_done
 );
+
     input wire clock;
     output reg program_done;
     // SREC parser
@@ -34,23 +35,24 @@ module pipeline(
     wire[0:31]  fetch_data_out;
     wire[0:31]  fetch_insn_decode;
     wire[0:31]  fetch_pc_out;
-    reg         fetch_stall;
     
-    wire[0:4]   fetch_rd_out;
+    wire[0:4]   fetch_rs_out;
+    wire[0:4]   fetch_rt_out;
+
     // Decode Stage
     reg         decode_insn_valid;
     wire[0:31]  decode_insn_in;
     wire[0:31]  decode_rs_data;
     wire[0:31]  decode_rt_data;
     wire[0:4]   decode_rd_in;
-    wire[0:4]   decode_rd_out;
     wire[0:31]  decode_pc_out;
     wire[0:31]  decode_ir_out;
     wire[0:31]  decode_write_back_data;
     wire        decode_reg_write_enable;
     wire[0:`CONTROL_REG_SIZE-1] decode_control;
     reg         decode_dump_regs;
-
+    wire        decode_stall_out;
+    
     // Execute Stage
     wire[0:31]  alu_rt_data_out;
     wire[0:31]  alu_out_data;
@@ -70,7 +72,10 @@ module pipeline(
     wire[0:4]   mem_stage_rd_out;
     reg         mem_stage_print_stack;
     reg[0:`CONTROL_REG_SIZE-1]  mem_stage_srec_read_control;
-   
+    
+    // Writeback stage
+    wire[0:4]   writeback_rd_out;
+
 
     reg[0:31]   nop_insn;
     reg         pipeline_stall;
@@ -103,7 +108,7 @@ module pipeline(
         .insn_decode    (fetch_data_out),
         .pc             (fetch_pc_out),
         .wren           (fetch_wren),
-        .stall          (fetch_stall),
+        .stall          (decode_stall_out),
         .pcIn           (alu_out_data),
         .jump           (alu_branch_taken)
     );
@@ -123,6 +128,9 @@ module pipeline(
         .regWriteEnable (decode_reg_write_enable),
         .control        (decode_control),
         .rdOut          (decode_rd_out),
+        .alu_stage_rd   (alu_rd_out),
+        .mem_stage_rd   (mem_stage_rd_out),
+        .writeback_stage_rd (writeback_stage_rd),
         .dumpRegs       (decode_dump_regs)
     );
 
@@ -165,7 +173,7 @@ module pipeline(
         .rdDataIn       (mem_stage_data_out),
         .memDataIn      (mem_stage_mem_data_out),
         .control        (mem_stage_control_out),
-        .rdOut          (decode_rd_in),
+        .rdOut          (writeback_rd_out),
         .regWriteEnable (decode_reg_write_enable),
         .writeBackData  (decode_write_back_data)
     );
@@ -181,17 +189,16 @@ module pipeline(
    
     assign decode_insn_in = pipeline_stall ? nop_insn : fetch_data_out;
     
-    assign fetch_rd_out = fetch_data_out[16:20];
+
 
     initial begin
-        fetch_stall = 1;
         mem_stage_srec_read_control = 0;
         mem_stage_srec_read_control[`MEM_WE] = 1;
         nop_insn = 32'b0000_0000;
     end
 
     initial begin
-        @(srec_done)
+        @(posedge srec_done)
         decode_dump_regs <= 1;
         @(posedge clock)
         decode_dump_regs <= 0;
@@ -214,19 +221,6 @@ module pipeline(
         end
     end
 
-    always begin
-        //alu_rd_out mem_stage_rd_out decode_rd_out, decode_rd_in
-        if (fetch_rd_out == decode_rd_out ||
-            fetch_rd_out == alu_rd_out ||
-            fetch_rd_out == mem_stage_rd_out ||
-            fetch_rd_out == decode_rd_in) begin
-            pipeline_stall = 1'b1; 
-            fetch_stall = 1'b1;
-        end else begin
-            pipeline_stall = 1'b0;
-            fetch_stall = 1'b0;
-        end
-    end
 
 
 endmodule
