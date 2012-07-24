@@ -82,7 +82,7 @@ module writeback_stage_tb;
 
 
 
-    srec_parser #("srec_files/BubbleSort.srec") U0(
+    srec_parser #("srec_files/SimpleIf.srec") U0(
         .clock (clock),
         .mem_address (srec_address),
         .mem_wren (srec_wren),
@@ -114,11 +114,11 @@ module writeback_stage_tb;
     
     decode U1(
         .clock (clock),
-        .insn (fetch_data_out),
+        .fetch_insn (fetch_data_out),
         .insn_valid (instruction_valid),
         .pc (fetch_address),
-        .rsData (decode_rs_data),
-        .rtData (decode_rt_data),
+        .rsDataOut (decode_rs_data),
+        .rtDataOut (decode_rt_data),
         .rdIn (decode_rd_in),
         .pcOut (decode_pc_out),
         .irOut (decode_ir_out),
@@ -292,7 +292,7 @@ module writeback_stage_tb;
 	        end
             if (cycle_count == 3) begin
                // $display("Time: %d, memory location: %X, memory write enabled: %b,  memory data: %X", $time, mem_stage_address_out,mem_stage_control_out[`MEM_WE],mem_stage_mem_data_out);
-               // mem_stage_print_stack = 1;
+                mem_stage_print_stack = 1;
             end
             if (cycle_count == 4) begin
                 mem_stage_print_stack = 0;
