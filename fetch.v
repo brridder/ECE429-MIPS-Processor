@@ -39,11 +39,8 @@ module fetch (
     end
 
     always @(posedge clock) begin
-/* -----\/----- EXCLUDED -----\/-----
-        $display("     Fetch jump %b", jump);
-        $display("     Fetch pcIn %X", pcIn);
-        $display("     Fetch stll %b", stall); 
- -----/\----- EXCLUDED -----/\----- */
+
+
         if (stall != 1'b1) begin
             if (jump) begin
                 address <= pcIn;                

@@ -45,6 +45,7 @@ module pipeline(
     wire[0:31]  decode_rs_data;
     wire[0:31]  decode_rt_data;
     wire[0:4]   decode_rd_in;
+    wire [0:4] 	decode_rd_out;
     wire[0:31]  decode_pc_out;
     wire[0:31]  decode_ir_out;
     wire[0:31]  decode_write_back_data;
@@ -97,7 +98,8 @@ module pipeline(
         .address        (mcu_address),
         .wren           (mcu_wren),
         .data_in        (mcu_data_in),
-        .data_out       (mcu_data_out)
+        .data_out       (mcu_data_out),
+	.print_stack    (1'b0)
     );
 
     // Fetch Stage
@@ -128,12 +130,13 @@ module pipeline(
         .regWriteEnable (decode_reg_write_enable),
         .control        (decode_control),
         .rdOut          (decode_rd_out),
-        .alu_stage_rd   (alu_rd_out),
-        .mem_stage_rd   (mem_stage_rd_out),
-        .writeback_stage_rd (writeback_stage_rd),
-        .alu_stage_reg_we   (alu_control_out[`REG_WE]),
-        .mem_stage_reg_we   (mem_stage_control_out[`REG_WE]),
-        .writeback_stage_rd (decode_reg_write_enable),
+        .alu_stage_rd   (decode_rd_out),
+        .mem_stage_rd   (alu_rd_out),
+        //.writeback_stage_rd (writeback_stage_rd),
+        .alu_stage_reg_we   (decode_control[`REG_WE]),
+        .mem_stage_reg_we   (alu_control_out[`REG_WE]),
+        .writeback_stage_rd (mem_stage_rd_out),
+        .writeback_stage_we (mem_stage_control_out[`REG_WE]),
         .stall          (decode_stall_out),
         .dumpRegs       (decode_dump_regs)
 
@@ -192,8 +195,8 @@ module pipeline(
     assign mem_stage_data_in = srec_done ? alu_rt_data_out : srec_data_in;
     assign mem_stage_control_in = srec_done ? alu_control_out : mem_stage_srec_read_control;
    
-    assign decode_insn_in = pipeline_stall ? nop_insn : fetch_data_out;
-    
+    //assign decode_insn_in = pipeline_stall ? nop_insn : fetch_data_out;
+    assign decode_insn_in = decode_stall_out ? nop_insn : fetch_data_out;
 
 
     initial begin
@@ -209,20 +212,21 @@ module pipeline(
         decode_dump_regs <= 0;
     end
 
-    always begin
+    always @(posedge clock) begin
         if (alu_insn_out[26:31] == `JR && alu_out_data== 31) begin
            program_done <= 1;
            decode_dump_regs <= 0;
         end
     end
     
-    always begin
+    always @(posedge clock) begin
         if (fetch_address < 32'h8002_0000) begin
             instruction_valid = 1'b0;
             pipeline_stall = 1'b1;
         end else begin 
             instruction_valid = 1'b1;
             pipeline_stall = 1'b0;
+	    $display("decode instruction: %X\n", decode_insn_in);
         end
     end
 

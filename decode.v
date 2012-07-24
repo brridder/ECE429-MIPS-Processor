@@ -23,6 +23,8 @@ module decode (
     mem_stage_rd,
     alu_stage_reg_we,
     mem_stage_reg_we,
+    writeback_stage_rd,
+    writeback_stage_we,
     stall,
     dumpRegs
 );
@@ -41,7 +43,7 @@ module decode (
     input wire[0:4] writeback_stage_rd;
     input wire      alu_stage_reg_we;
     input wire      mem_stage_reg_we;
-    input wire      writeback_stage_reg_we
+    input wire      writeback_stage_we;
     output wire[0:31] rsData; // Latched in the reg_file module
     output wire[0:31] rtData;
     output reg[0:31] pcOut; 
@@ -94,7 +96,12 @@ module decode (
     always @(posedge clock)
     begin
         pcOut <= pc;
-        irOut <= insn;
+	if (insn_valid == 1) begin
+            irOut <= insn;
+	end else begin
+	    irOut <= 32'h0000_0000;
+	end
+
         rdOut <= rd;
     end
 
@@ -197,67 +204,125 @@ module decode (
     //mem_stage_rd,
     //writeback_stage_rd, 
     always @(posedge control)
-    begin 
-        //if (control[`REG_WE] == 1) begin
-        if (alu_stage_reg_we == 1) begin
-            if (control[`I_TYPE] == 1) begin
-                if (rs == alu_stage_rd ) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end else if (control[`R_TYPE] == 1) begin
-                if (rt == alu_stage_rd || rs == alu_stage_rd) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end
-        end
+      begin
+      //Stall on RAW between decode and Execute, Memory, or Writeback stage
+      //TODO: we might stall on NOP, because it is R type ... 
 
-        if (mem_stage_reg_we == 1) begin
-            if (control[`I_TYPE] == 1) begin
-                if (rs == mem_stage_rd) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end else if (control[`R_TYPE] == 1) begin
-                if (rt == mem_stage_rd || rs == mem_stage_rd) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end
-        end
+	case(opcode)
+          // R-TYPE 
+          6'b000000: begin
+	      if (alu_stage_reg_we == 1) begin
+		  if (rs == alu_stage_rd || rt == alu_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end
+                   
+          end // case: 6'b000000
+           
+    //I-TYPE
+          6'b001001: begin //ADDIU
+	      if (alu_stage_reg_we == 1) begin
+		  if (rt == alu_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rt == mem_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end
+          end
+          6'b001010: begin //SLTI
+              if (alu_stage_reg_we == 1) begin
+		  if (rt == alu_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rt == mem_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end
+	  end
+          6'b100011: begin //LW
+              if (alu_stage_reg_we == 1) begin
+		  if (rt == alu_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rt == mem_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end
+	  end
+          6'b101011: begin //SW
+              if (alu_stage_reg_we == 1) begin
+		  if (rt == alu_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rt == mem_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end
+	  end
+          6'b001111: begin //LUI
+              if (alu_stage_reg_we == 1) begin
+		  if (rt == alu_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rt == mem_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end
+	  end
+          6'b001101: begin //ORI
+              if (alu_stage_reg_we == 1) begin
+		  if (rt == alu_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rt == mem_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		  end 
+	      end
+	  end
+          //J-TYPE
+          default:
+            ;                  
+        endcase // case (opcode)
         
-
-        // Check the inputs for RD from the writeback stage as the writeback is
-        // done after the reads
-        if (regWriteEnable == 1) begin
-            if (control[`I_TYPE] == 1) begin
-                if (rs == rdIn) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end else if (control[`R_TYPE] == 1) begin
-                if (rt == rdIn|| rs == rdIn) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end
-        end
-
-        if (decode_control[`REG_WE] == 1) begin
-            if (control[`I_TYPE] == 1) begin
-                if (rs == rdOut) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end else if (control[`R_TYPE] == 1) begin
-                if (rt == rdOut || rs == rdOut) begin
-                    irOut = 32'b0000_0000;
-                    stall = 1'b1;
-                end
-            end
-
-        end
     end
     
 endmodule
