@@ -70,7 +70,8 @@ module alu (
 	    rdOut <= rdIn;
 	end
 
-	$display("ALU funct: %x rt: %d rt_data: %d rs_data: %d", funct, rt, rtData, rsData);
+
+//	$display("ALU funct: %x rt: %d rt_data: %d rs_data: %d", funct, rt, rtData, rsData);
     end // always @ (posedge clock)
 
 	
@@ -221,8 +222,20 @@ module alu (
     end
     
     always @(posedge clock)
-    begin
-        control_out = control;
+      begin
+	  //handles NOPs inserted for pipeline stalls not having correct control signals
+	  if (insn == 0) begin
+	    control_out[`REG_WE] <= 1'b0;
+            control_out[`I_TYPE] <= 1'b0;
+            control_out[`R_TYPE] <= 1'b0;
+            control_out[`J_TYPE] <= 1'b0;
+            control_out[`MEM_WE] <= 1'b0;
+            control_out[`MEM_WB] <= 1'b0;
+            control_out[`MEM_READ] <= 1'b0;
+            control_out[`LINK] <= 1'b0;
+	  end else begin
+              control_out <= control;
+	  end // else: !if(insn == 0)
     end
 
 endmodule

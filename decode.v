@@ -126,7 +126,7 @@ module decode (
 //	end
 	stalled_insn <= insn;
 	//writeback_data_forward <= writeBackData;
-	$display("wb_data: %d wb_data_f: %d rs_data: %d rt_data: %d", writeBackData, writeback_data_forward, rsData, rtData);
+	//$display("wb_data: %d wb_data_f: %d rs_data: %d rt_data: %d", writeBackData, writeback_data_forward, rsData, rtData);
 
     end // always @ (posedge clock)
 
@@ -159,7 +159,6 @@ module decode (
                     control[`REG_WE] = 1'b1;
                     control[`I_TYPE] = 1'b1;
 		    rdOut <= rt;
-		    $display("foo %d", rt);
                 end
                 6'b001010: begin //SLTI
                     control[`REG_WE] = 1;
@@ -266,7 +265,7 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r alu");
+		      //$display("stall r alu");
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
@@ -274,7 +273,7 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r mem");
+		      //$display("stall r mem");
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
@@ -282,7 +281,7 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r wb");
+		      //$display("stall r wb");
 		  end
 	      end else if (regWriteEnable == 1) begin
 		  if (rs == rdIn || rt == rdIn) begin
@@ -329,7 +328,6 @@ module decode (
 		  end 
 	      end else begin
                   stall = 1'b0;
-		  $display("Wierners");
               end
           end
           6'b001010: begin //SLTI
@@ -372,6 +370,8 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
+		      control[`MEM_WB] <= 1'b0;                    
+                      control[`MEM_READ] <= 1'b0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rs == mem_stage_rd) begin
@@ -379,6 +379,8 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
+		      control[`MEM_WB] <= 1'b0;                    
+                      control[`MEM_READ] <= 1'b0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rs == writeback_stage_rd) begin
@@ -386,6 +388,8 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
+		      control[`MEM_WB] <= 1'b0;                    
+                      control[`MEM_READ] <= 1'b0;
 		  end
 	      end else if (regWriteEnable == 1) begin
 		  if (rs == rdIn) begin
@@ -393,22 +397,22 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
+		      control[`MEM_WB] <= 1'b0;                    
+                      control[`MEM_READ] <= 1'b0;
 		  end 
 	      end else begin
                   stall = 1'b0;
               end
 	  end
           6'b101011: begin //SW
-	      $display("gahagahagah1");
               if (alu_stage_reg_we == 1 && stall == 0) begin
-		   $display("gahagahagah2");
-		  $display("alu_rd: %d, rs: %d, rt: %d", alu_stage_rd, rs, rt);
+//		  $display("alu_rd: %d, rs: %d, rt: %d", alu_stage_rd, rs, rt);
 		  if (rt == alu_stage_rd || rs == alu_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-		      $display("hi");
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		      control[`MEM_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd || rs == mem_stage_rd) begin
@@ -416,6 +420,7 @@ module decode (
 		      irOut <= nop_insn;
               rdOut <= 0;
               control[`REG_WE] <= 0;
+		      control[`MEM_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
@@ -423,6 +428,7 @@ module decode (
 		      irOut <= nop_insn;
               rdOut <= 0;
               control[`REG_WE] <= 0;
+		      control[`MEM_WE] <= 0;
           end
 		  end else if (regWriteEnable == 1) begin
           if (rt == rdIn || rs == rdIn) begin
@@ -430,6 +436,7 @@ module decode (
               irOut <= nop_insn;
               rdOut <= 0;
               control[`REG_WE] <= 0;
+	      control[`MEM_WE] <= 0;
           end 
 	      end else begin
                   stall = 1'b0;
@@ -509,7 +516,6 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r alu");
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
@@ -517,7 +523,6 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r mem");
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
@@ -525,7 +530,6 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r wb");
 		  end
 	      end else if (regWriteEnable == 1) begin
 		  if (rs == rdIn || rt == rdIn) begin
@@ -545,7 +549,6 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r alu");
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
@@ -553,7 +556,6 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r mem");
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
@@ -561,7 +563,6 @@ module decode (
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      $display("stall r wb");
 		  end
 	      end else if (regWriteEnable == 1) begin
 		  if (rs == rdIn || rt == rdIn) begin
@@ -639,7 +640,40 @@ module decode (
 	      end else begin
                   stall = 1'b0;
               end
-          end
+          end // case: 6'b000110
+	  6'b000001: begin //REGIMM instructions
+              if (alu_stage_reg_we == 1 && stall == 0) begin
+		  if (rs == alu_stage_rd) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end 
+	      end else if (mem_stage_reg_we == 1) begin
+		  if (rs == mem_stage_rd) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end 
+	      end else if (writeback_stage_we == 1) begin
+		  if (rs == writeback_stage_rd) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end
+	      end else if (regWriteEnable == 1) begin
+		  if (rs == rdIn) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end 
+	      end else begin
+                  stall = 1'b0;
+              end
+	  end // case: 6'b000001
           default:
 	    stall = 1'b0;
         endcase // case (opcode)
