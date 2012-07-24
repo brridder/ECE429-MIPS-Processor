@@ -249,6 +249,7 @@ module decode (
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		      $display("stall r alu");
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
@@ -256,6 +257,7 @@ module decode (
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		      $display("stall r mem");
 		  end 
 	      end else if (writeback_stage_we == 1) begin
@@ -263,6 +265,7 @@ module decode (
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		      $display("stall r wb");
 		  end 
 	      end else begin
@@ -278,18 +281,21 @@ module decode (
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else begin
                   stall = 1'b0;
@@ -302,18 +308,21 @@ $display("Wierners");
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else begin
                   stall = 1'b0;
@@ -325,18 +334,21 @@ $display("Wierners");
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd || rs == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else begin
                   stall = 1'b0;
@@ -351,6 +363,7 @@ $display("Wierners");
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		      $display("hi");
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
@@ -358,12 +371,14 @@ $display("Wierners");
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else begin
                   stall = 1'b0;
@@ -375,18 +390,21 @@ $display("Wierners");
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else begin
                   stall = 1'b0;
@@ -398,18 +416,21 @@ $display("Wierners");
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
               rdOut <= 0;
+              control[`REG_WE] <= 0;
 		  end 
 	      end else begin
               stall = 1'b0;
