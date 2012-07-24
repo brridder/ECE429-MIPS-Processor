@@ -55,6 +55,9 @@ module alu (
     assign offset = insn[16:31];
     assign insn_index = insn[6:31];
 
+
+    //TODO: this was moved to decode
+    //test and remove
     always @(posedge clock)
     begin
 	if (control[`I_TYPE]) begin

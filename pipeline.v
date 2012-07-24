@@ -61,6 +61,7 @@ module pipeline(
     wire[0:`CONTROL_REG_SIZE-1] alu_control_out;
     wire        alu_branch_taken;
     wire[0:31]  alu_insn_out;
+    wire [0:31] alu_insn_in;
     wire[0:4]   alu_rd_out;
 
     // Memory Stage
@@ -119,12 +120,12 @@ module pipeline(
     // Decode Stage
     decode decode0(
         .clock          (clock),
-        .insn           (decode_insn_in),
+        .fetch_insn     (decode_insn_in),
         .insn_valid     (decode_insn_valid),
         .pc             (fetch_address),
-        .rsData         (decode_rs_data),
-        .rtData         (decode_rt_data),
-        .rdIn           (mem_stage_rd_out),
+        .rsDataOut      (decode_rs_data),
+        .rtDataOut      (decode_rt_data),
+        .rdIn           (writeback_rd_out),
         .pcOut          (decode_pc_out),
         .irOut          (decode_ir_out),
         .writeBackData  (decode_write_back_data),
@@ -153,7 +154,7 @@ module pipeline(
         .control_out    (alu_control_out),
         .outData        (alu_out_data),
         .branchTaken    (alu_branch_taken),
-        .insn           (decode_ir_out),
+        .insn           (alu_insn_in),
         .insn_out       (alu_insn_out),
         .pc             (decode_pc_out),
         .rdIn           (decode_rd_out),
@@ -197,8 +198,11 @@ module pipeline(
     assign mem_stage_control_in = srec_done ? alu_control_out : mem_stage_srec_read_control;
    
     //assign decode_insn_in = pipeline_stall ? nop_insn : fetch_data_out;
-    assign decode_insn_in = decode_stall_out ? nop_insn : fetch_data_out;
+    assign decode_insn_in = decode_stall_out ? decode_ir_out : fetch_data_out;
+    assign alu_insn_in = decode_stall_out ? nop_insn : decode_ir_out;
     assign fetch_stall = srec_done ? decode_stall_out : 1'b1;
+
+    
 
 
     initial begin
@@ -225,13 +229,17 @@ module pipeline(
         if (fetch_address < 32'h8002_0000) begin
             instruction_valid = 1'b0;
             pipeline_stall = 1'b1;
+	    decode_insn_valid = 1'b0;
         end else begin 
             instruction_valid = 1'b1;
+	    decode_insn_valid = 1'b1;
             pipeline_stall = 1'b0;
-	    $display("decode instruction: %X\n", decode_insn_in);
-	    $display("fetched instruction: %X\n", fetch_data_out);
+	    $display("decode instruction out: %X", decode_ir_out);
+	    $display("fetched instruction: %X", fetch_data_out);
 	    $display("decode stall: %d", decode_stall_out);
 	    $display("fetch pc out: %X", fetch_pc_out);
+	    $display("ALU register WE: %d", decode_control[`REG_WE]);
+	    $display("ALU RD: %d\n\n", decode_rd_out);
         end
     end
 
