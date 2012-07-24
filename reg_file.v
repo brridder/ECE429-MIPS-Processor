@@ -45,7 +45,7 @@ module reg_file (
         for (i = 0; i < NUM_REGS; i = i + 1) begin
             registers[i] = i;
         end 
-        registers[29] <= 32'h80020200;
+        registers[29] <= 32'h80022000;
     end // initial
 
     always @(posedge clock)

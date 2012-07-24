@@ -84,7 +84,7 @@ module pipeline(
     reg         pipeline_stall;
     reg         instruction_valid; 
     // SREC Parser
-    srec_parser #("srec_files/BubbleSort.srec") srec0(
+    srec_parser #("srec_files/demo.srec") srec0(
         .clock          (clock),
         .mem_address    (srec_address),
         .mem_wren       (srec_wren),
@@ -216,7 +216,8 @@ module pipeline(
         @(posedge srec_done)
         decode_dump_regs <= 1;
         @(posedge clock)
-        decode_dump_regs <= 0;
+        decode_dump_regs <= 1;
+	    mem_stage_print_stack <= 1;
     end
 
     always @(posedge clock) begin
