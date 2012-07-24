@@ -252,35 +252,36 @@ module decode (
 		  if (rs == alu_stage_rd || rt == alu_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		      $display("stall r alu");
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		      $display("stall r mem");
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		      $display("stall r wb");
-		  end else if (regWriteEnable == 1) begin
-          if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
-              stall = 1'b1;
-              irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end
+		  end
+	      end else if (regWriteEnable == 1) begin
+		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end
 	      end else begin
-              stall = 1'b0;
-          end 
+		  stall = 1'b0;
+	      end 
                    
           end // case: 6'b000000
            
@@ -290,33 +291,33 @@ module decode (
 		  if (rt == alu_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end
-		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd) begin
-              stall = 1'b1;
-              irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end 
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end
+	      end else if (regWriteEnable == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end 
 	      end else begin
                   stall = 1'b0;
-$display("Wierners");
+		  $display("Wierners");
               end
           end
           6'b001010: begin //SLTI
@@ -324,63 +325,63 @@ $display("Wierners");
 		  if (rt == alu_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
 		  if (rt == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
 		  if (rt == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0; 
-          end
-		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd) begin
-              stall = 1'b1;
-              irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end 
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0; 
+		  end
+	      end else if (regWriteEnable == 1) begin
+		  if (rt == writeback_stage_rd) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end 
 	      end else begin
                   stall = 1'b0;
               end
 	  end
           6'b100011: begin //LW
 	      if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rt == alu_stage_rd || rs == alu_stage_rd) begin
+		  if (rs == alu_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		  end 
 	      end else if (mem_stage_reg_we == 1) begin
-		  if (rt == mem_stage_rd || rs == mem_stage_rd) begin
+		  if (rs == mem_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
 		  end 
 	      end else if (writeback_stage_we == 1) begin
-		  if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
+		  if (rs == writeback_stage_rd) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end
-		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
-              stall = 1'b1;
-              irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end 
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end
+	      end else if (regWriteEnable == 1) begin
+		  if (rs == writeback_stage_rd) begin
+		      stall = 1'b1;
+		      irOut <= nop_insn;
+		      rdOut <= 0;
+		      control[`REG_WE] <= 0;
+		  end 
 	      end else begin
                   stall = 1'b0;
               end
@@ -445,7 +446,7 @@ $display("Wierners");
               control[`REG_WE] <= 0;
           end
 		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
+          if (rt == writeback_stage_rd) begin
               stall = 1'b1;
               irOut <= nop_insn;
               rdOut <= 0;
@@ -478,7 +479,7 @@ $display("Wierners");
               control[`REG_WE] <= 0;
           end
 		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
+          if (rt == writeback_stage_rd) begin
               stall = 1'b1;
               irOut <= nop_insn;
               rdOut <= 0;

@@ -215,7 +215,7 @@ module pipeline(
         @(posedge srec_done)
         decode_dump_regs <= 1;
         @(posedge clock)
-        decode_dump_regs <= 0;
+        decode_dump_regs <= 1;
     end
 
     always @(posedge clock) begin
@@ -225,7 +225,9 @@ module pipeline(
 	    @(posedge clock);
         end
     end
-    
+    always @(posedge clock) begin
+    end 
+
     always @(posedge clock) begin
         if (fetch_address < 32'h8002_0000) begin
             instruction_valid = 1'b0;
