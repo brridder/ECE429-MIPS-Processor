@@ -71,7 +71,8 @@ module alu (
 	end
 
 	$display("ALU funct: %x rt: %d rt_data: %d rs_data: %d", funct, rt, rtData, rsData);
-    end
+    end // always @ (posedge clock)
+
 	
     always @(posedge clock)
     begin

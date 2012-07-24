@@ -84,7 +84,7 @@ module pipeline(
     reg         pipeline_stall;
     reg         instruction_valid; 
     // SREC Parser
-    srec_parser #("srec_files/SimpleAdd.srec") srec0(
+    srec_parser #("srec_files/SimpleIf.srec") srec0(
         .clock          (clock),
         .mem_address    (srec_address),
         .mem_wren       (srec_wren),
@@ -140,6 +140,7 @@ module pipeline(
         .writeback_stage_rd (mem_stage_rd_out),
         .writeback_stage_we (mem_stage_control_out[`REG_WE]),
         .stall          (decode_stall_out),
+	.alu_branch_taken (alu_branch_taken),
         .dumpRegs       (decode_dump_regs)
 
     );
@@ -199,7 +200,7 @@ module pipeline(
    
     //assign decode_insn_in = pipeline_stall ? nop_insn : fetch_data_out;
     assign decode_insn_in = decode_stall_out ? decode_ir_out : fetch_data_out;
-    assign alu_insn_in = decode_stall_out ? nop_insn : decode_ir_out;
+    assign alu_insn_in = (decode_stall_out || alu_branch_taken) ? nop_insn : decode_ir_out;
     assign fetch_stall = srec_done ? decode_stall_out : 1'b1;
 
     
@@ -237,7 +238,7 @@ module pipeline(
             instruction_valid = 1'b1;
 	    decode_insn_valid = 1'b1;
             pipeline_stall = 1'b0;
-	    $display("decode instruction out: %X", decode_ir_out);
+	    $display("decode instruction out: %X", alu_insn_in);
 	    $display("fetched instruction: %X", fetch_data_out);
 	    $display("decode stall: %d", decode_stall_out);
 	    $display("fetch pc out: %X", fetch_pc_out);
