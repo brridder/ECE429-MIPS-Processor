@@ -203,11 +203,11 @@ module decode (
     //alu_stage_rd,
     //mem_stage_rd,
     //writeback_stage_rd, 
-    always @(posedge control)
+    always @(posedge clock)
       begin
       //Stall on RAW between decode and Execute, Memory, or Writeback stage
       //TODO: we might stall on NOP, because it is R type ... 
-
+	  stall = 1'b0;
 	case(opcode)
           // R-TYPE 
           6'b000000: begin

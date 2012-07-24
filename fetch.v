@@ -40,7 +40,6 @@ module fetch (
 
     always @(posedge clock) begin
 
-
         if (stall != 1'b1) begin
             if (jump) begin
                 address <= pcIn;                

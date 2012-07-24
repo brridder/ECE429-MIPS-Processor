@@ -38,6 +38,7 @@ module pipeline(
     
     wire[0:4]   fetch_rs_out;
     wire[0:4]   fetch_rt_out;
+    wire        fetch_stall; 	
 
     // Decode Stage
     reg         decode_insn_valid;
@@ -110,7 +111,7 @@ module pipeline(
         .insn_decode    (fetch_data_out),
         .pc             (fetch_pc_out),
         .wren           (fetch_wren),
-        .stall          (decode_stall_out),
+        .stall          (fetch_stall),
         .pcIn           (alu_out_data),
         .jump           (alu_branch_taken)
     );
@@ -197,6 +198,7 @@ module pipeline(
    
     //assign decode_insn_in = pipeline_stall ? nop_insn : fetch_data_out;
     assign decode_insn_in = decode_stall_out ? nop_insn : fetch_data_out;
+    assign fetch_stall = srec_done ? decode_stall_out : 1'b1;
 
 
     initial begin
@@ -227,6 +229,9 @@ module pipeline(
             instruction_valid = 1'b1;
             pipeline_stall = 1'b0;
 	    $display("decode instruction: %X\n", decode_insn_in);
+	    $display("fetched instruction: %X\n", fetch_data_out);
+	    $display("decode stall: %d", decode_stall_out);
+	    $display("fetch pc out: %X", fetch_pc_out);
         end
     end
 
