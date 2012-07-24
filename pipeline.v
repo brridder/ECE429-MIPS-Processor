@@ -84,7 +84,7 @@ module pipeline(
     reg         pipeline_stall;
     reg         instruction_valid; 
     // SREC Parser
-    srec_parser #("srec_files/BubbleSort.srec") srec0(
+    srec_parser #("srec_files/SimpleIf.srec") srec0(
         .clock          (clock),
         .mem_address    (srec_address),
         .mem_wren       (srec_wren),
@@ -234,19 +234,19 @@ module pipeline(
         if (fetch_address < 32'h8002_0000) begin
             instruction_valid = 1'b0;
             pipeline_stall = 1'b1;
-	    decode_insn_valid = 1'b0;
+	        decode_insn_valid = 1'b0;
         end else begin 
             instruction_valid = 1'b1;
-	    decode_insn_valid = 1'b1;
+	        decode_insn_valid = 1'b1;
             pipeline_stall = 1'b0;
-	    //$display("\n\n %d %x", $time, fetch_address);
-	    //$display("fetched instruction: %X", fetch_data_out);
-	    //$display("decode instruction out: %X", alu_insn_in);
-        //$display("alu instruction out: %X", alu_insn_out);
-	    //$display("decode stall: %d", decode_stall_out);
-	    //$display("fetch pc out: %X", fetch_pc_out);
-	    //$display("ALU register WE: %d", decode_control[`REG_WE]);
-	    //$display("ALU RD: %d\n\n", decode_rd_out);
+	    $display("\n\n %d %x", $time, fetch_address);
+	    $display("fetched instruction: %X", fetch_data_out);
+	    $display("decode instruction out: %X", alu_insn_in);
+        $display("alu instruction out: %X", alu_insn_out);
+	    $display("decode stall: %d", decode_stall_out);
+	    $display("fetch pc out: %X", fetch_pc_out);
+	    $display("ALU register WE: %d", decode_control[`REG_WE]);
+	    $display("ALU RD: %d\n\n", decode_rd_out);
         end
     end
 

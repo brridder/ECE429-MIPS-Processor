@@ -137,15 +137,7 @@ module decode (
     always @(posedge clock)
     begin
         pcOut <= pc;
-//	if (insn_valid == 1) begin
-//            irOut <= insn;
-//	end else begin
-//	    irOut <= 32'h0000_0000;
-//	end
-	stalled_insn <= insn;
-	//writeback_data_forward <= writeBackData;
-	//$display("wb_data: %d wb_data_f: %d rs_data: %d rt_data: %d", writeBackData, writeback_data_forward, rsData, rtData);
-
+	    stalled_insn <= insn;
     end // always @ (posedge clock)
 
     always @(posedge clock)
@@ -159,7 +151,7 @@ module decode (
         control[`MEM_READ] = 1'b0;
         control[`LINK] = 1'b0;
 
-	rdOut <= rd;
+	    rdOut <= rd;
         if(insn_valid && insn != 32'h0000_0000) begin            
             case(opcode)
                 // R-TYPE
@@ -273,6 +265,7 @@ module decode (
 	  end else begin
 	      irOut <= insn;
 	  end
+
       if (opcode == 6'b000000 || opcode == `BEQ || opcode == `BNE || opcode == `SW) begin
 	      if (should_stall_rs || should_stall_rt) begin
 		      stall = 1'b1;
