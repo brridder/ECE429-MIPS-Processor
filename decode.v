@@ -21,7 +21,8 @@ module decode (
     rdOut,
     alu_stage_rd,
     mem_stage_rd,
-    writeback_stage_rd, 
+    alu_stage_reg_we,
+    mem_stage_reg_we,
     stall,
     dumpRegs
 );
@@ -38,7 +39,9 @@ module decode (
     input wire[0:4] alu_stage_rd;
     input wire[0:4] mem_stage_rd;
     input wire[0:4] writeback_stage_rd;
-
+    input wire      alu_stage_reg_we;
+    input wire      mem_stage_reg_we;
+    input wire      writeback_stage_reg_we
     output wire[0:31] rsData; // Latched in the reg_file module
     output wire[0:31] rtData;
     output reg[0:31] pcOut; 
@@ -190,18 +193,70 @@ module decode (
         end // if (insn_valid = 1'b1)
     end // always @ (posedge clock)
 
+    //alu_stage_rd,
+    //mem_stage_rd,
+    //writeback_stage_rd, 
     always @(posedge control)
-    begin
-        if (control[`REG_WE] == 1) begin
+    begin 
+        //if (control[`REG_WE] == 1) begin
+        if (alu_stage_reg_we == 1) begin
             if (control[`I_TYPE] == 1) begin
-                //if (rt == 
+                if (rs == alu_stage_rd ) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
             end else if (control[`R_TYPE] == 1) begin
-            
-            end else if (control[`J_TYPE] == 1) begin
-
+                if (rt == alu_stage_rd || rs == alu_stage_rd) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
             end
-            irOut = 32'b0000_0000;
-            stall = 1'b1;
+        end
+
+        if (mem_stage_reg_we == 1) begin
+            if (control[`I_TYPE] == 1) begin
+                if (rs == mem_stage_rd) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
+            end else if (control[`R_TYPE] == 1) begin
+                if (rt == mem_stage_rd || rs == mem_stage_rd) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
+            end
+        end
+        
+
+        // Check the inputs for RD from the writeback stage as the writeback is
+        // done after the reads
+        if (regWriteEnable == 1) begin
+            if (control[`I_TYPE] == 1) begin
+                if (rs == rdIn) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
+            end else if (control[`R_TYPE] == 1) begin
+                if (rt == rdIn|| rs == rdIn) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
+            end
+        end
+
+        if (decode_control[`REG_WE] == 1) begin
+            if (control[`I_TYPE] == 1) begin
+                if (rs == rdOut) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
+            end else if (control[`R_TYPE] == 1) begin
+                if (rt == rdOut || rs == rdOut) begin
+                    irOut = 32'b0000_0000;
+                    stall = 1'b1;
+                end
+            end
+
         end
     end
     

@@ -131,7 +131,12 @@ module pipeline(
         .alu_stage_rd   (alu_rd_out),
         .mem_stage_rd   (mem_stage_rd_out),
         .writeback_stage_rd (writeback_stage_rd),
+        .alu_stage_reg_we   (alu_control_out[`REG_WE]),
+        .mem_stage_reg_we   (mem_stage_control_out[`REG_WE]),
+        .writeback_stage_rd (decode_reg_write_enable),
+        .stall          (decode_stall_out),
         .dumpRegs       (decode_dump_regs)
+
     );
 
     // Execute Stage
