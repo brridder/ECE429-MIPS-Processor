@@ -27,11 +27,10 @@ module pipeline_tb();
         #5 clock = !clock;
     end
 
-    always @(posedge clock)
-    begin
-        if (program_done == 1) begin
-            ->terminate_sim;
-        end
+    initial @(posedge program_done) begin
+        @(posedge clock);
+        @(posedge clock);
+        ->terminate_sim;
     end
 
 

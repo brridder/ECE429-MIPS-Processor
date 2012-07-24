@@ -256,42 +256,35 @@ module decode (
 	      irOut <= insn;
 	  end
 
+        //if (opcode == 6'b000000
 	case(opcode)
           // R-TYPE 
           6'b000000: begin
-	      if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rs == alu_stage_rd || rt == alu_stage_rd) begin
+	      if ((alu_stage_reg_we == 1 && stall == 0) && (rs == alu_stage_rd || rt == alu_stage_rd)) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
 		      //$display("stall r alu");
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
+	      end else if ((mem_stage_reg_we == 1) && (rs == mem_stage_rd || rt == mem_stage_rd)) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
 		      //$display("stall r mem");
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
+	      end else if ((writeback_stage_we == 1) && (rs == writeback_stage_rd || rt == writeback_stage_rd)) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
 		      //$display("stall r wb");
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rs == rdIn || rt == rdIn) begin
+	      end else if ((regWriteEnable == 1) && (rs == rdIn || rt == rdIn)) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		  end
 	      end else begin
-		  stall = 1'b0;
+		        stall = 1'b0;
 	      end 
                    
           end // case: 6'b000000
