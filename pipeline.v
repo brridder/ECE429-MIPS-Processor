@@ -84,7 +84,7 @@ module pipeline(
     reg         pipeline_stall;
     reg         instruction_valid; 
     // SREC Parser
-    srec_parser #("srec_files/SumArray.srec") srec0(
+    srec_parser #("srec_files/BubbleSort.srec") srec0(
         .clock          (clock),
         .mem_address    (srec_address),
         .mem_wren       (srec_wren),
@@ -101,7 +101,7 @@ module pipeline(
         .wren           (mcu_wren),
         .data_in        (mcu_data_in),
         .data_out       (mcu_data_out),
-	.print_stack    (1'b0)
+	    .print_stack    (1'b0)
     );
 
     // Fetch Stage
@@ -217,13 +217,13 @@ module pipeline(
         decode_dump_regs <= 1;
         @(posedge clock)
         decode_dump_regs <= 0;
-	mem_stage_print_stack <= 1;
     end
 
     always @(posedge clock) begin
         if (alu_insn_out[26:31] == `JR && alu_out_data== 31) begin
            program_done <= 1;
            decode_dump_regs <= 1;
+	       mem_stage_print_stack <= 1;
 	    @(posedge clock);
         end
     end
@@ -239,6 +239,7 @@ module pipeline(
             instruction_valid = 1'b1;
 	    decode_insn_valid = 1'b1;
             pipeline_stall = 1'b0;
+
 	    $display("\n\n %x ", fetch_pc_out);
 	    $display("decode instruction out: %X", alu_insn_in);
 	    $display("fetched instruction: %X", fetch_data_out);
@@ -246,6 +247,7 @@ module pipeline(
 	    $display("fetch pc out: %X", fetch_pc_out);
 	    $display("ALU register WE: %d", decode_control[`REG_WE]);
 	    $display("ALU RD: %d\n\n", decode_rd_out);
+
         end
     end
 

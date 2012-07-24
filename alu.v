@@ -157,28 +157,28 @@ module alu (
 
 	            `BEQ:
 		          if (rsData == rtData) begin
-		              outData = $signed(pc + 4) + $signed(offset << 2);
+		              outData = $signed(pc) + $signed(offset << 2);
 		              branchTaken= 1'b1;
 		          end else begin
 		              branchTaken= 1'b0;
 		          end
 	            `BNE:
 		          if  (rsData  != rtData) begin
-		              outData = $signed(pc + 4) + $signed(offset << 2);
+		              outData = $signed(pc) + $signed(offset << 2);
 		              branchTaken = 1'b1;
 		          end else begin
 		              branchTaken = 1'b0;
 		          end
 	            `BGTZ:
 		          if ($signed(rsData) > 1'b0) begin
-		              outData = $signed(pc + 4) + $signed(offset << 2);
+		              outData = $signed(pc) + $signed(offset << 2);
 		              branchTaken= 1'b1;
 		          end else begin
 		              branchTaken = 1'b0;
 		          end
 	            `BLEZ:
 		          if ($signed(rsData) <= 1'b0) begin
-		              outData = $signed(pc + 4) + $signed(offset << 2);
+		              outData = $signed(pc) + $signed(offset << 2);
 		          end else begin
 		              branchTaken = 1'b0;
 		          end
@@ -187,14 +187,14 @@ module alu (
 		          case(rt)
 		              `BLTZ:
 		                if ($signed(rsData) < 1'b0) begin
-			                outData = $signed(pc + 4) + $signed(offset << 2);
+			                outData = $signed(pc) + $signed(offset << 2);
 			                branchTaken = 1'b1;
 		                end else begin
 			                branchTaken = 1'b0;
 		                end
 		              `BGEZ:
 		                if ($signed(rsData) >= 1'b0) begin
-			                outData = $signed(pc + 4) + $signed(offset << 2);
+			                outData = $signed(pc) + $signed(offset << 2);
 			                branchTaken = 1'b1;
 		                end else begin
 			                branchTaken = 1'b0;
