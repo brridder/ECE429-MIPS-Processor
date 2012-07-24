@@ -76,7 +76,8 @@ module decode (
     reg [0:31] writeback_data_forward;
 
     
-    
+    wire    should_stall_rs; 
+    wire    should_stall_rt; 
   
     reg_file REGISTER_FILE(
         .clock (clock),
@@ -111,7 +112,24 @@ module decode (
 
     assign rsDataOut = (regWriteEnable == 1 && rs == rdIn) ? writeBackData : rsData;
     assign rtDataOut = (regWriteEnable == 1 && rt == rdIn) ? writeBackData : rtData;
+    
+    assign should_stall_rs = (((alu_stage_reg_we == 1 && stall == 0) && 
+                           (rs == alu_stage_rd)) || 
+                           ((mem_stage_reg_we == 1) && 
+                           (rs == mem_stage_rd)) ||
+                           ((writeback_stage_we == 1) &&
+                           (rs == writeback_stage_rd)) ||
+                           ((regWriteEnable == 1) &&
+                           (rs == rdIn)));
 
+    assign should_stall_rt = (((alu_stage_reg_we == 1 && stall == 0) && 
+                           (rt == alu_stage_rd)) || 
+                           ((mem_stage_reg_we == 1) && 
+                           (rt == mem_stage_rd)) ||
+                           ((writeback_stage_we == 1) &&
+                           (rt == writeback_stage_rd)) ||
+                           ((regWriteEnable == 1) &&
+                           (rt == rdIn)));
     initial begin
         nop_insn = 32'h0000_0000;
     end
@@ -119,15 +137,7 @@ module decode (
     always @(posedge clock)
     begin
         pcOut <= pc;
-//	if (insn_valid == 1) begin
-//            irOut <= insn;
-//	end else begin
-//	    irOut <= 32'h0000_0000;
-//	end
-	stalled_insn <= insn;
-	//writeback_data_forward <= writeBackData;
-	//$display("wb_data: %d wb_data_f: %d rs_data: %d rt_data: %d", writeBackData, writeback_data_forward, rsData, rtData);
-
+	    stalled_insn <= insn;
     end // always @ (posedge clock)
 
     always @(posedge clock)
@@ -141,7 +151,7 @@ module decode (
         control[`MEM_READ] = 1'b0;
         control[`LINK] = 1'b0;
 
-	rdOut <= rd;
+	    rdOut <= rd;
         if(insn_valid && insn != 32'h0000_0000) begin            
             case(opcode)
                 // R-TYPE
@@ -256,421 +266,43 @@ module decode (
 	      irOut <= insn;
 	  end
 
-        //if (opcode == 6'b000000
-	case(opcode)
-          // R-TYPE 
-          6'b000000: begin
-	      if ((alu_stage_reg_we == 1 && stall == 0) && (rs == alu_stage_rd || rt == alu_stage_rd)) begin
+      if (opcode == 6'b000000 || opcode == `BEQ || opcode == `BNE || opcode == `SW) begin
+	      if (should_stall_rs || should_stall_rt) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		      //$display("stall r alu");
-	      end else if ((mem_stage_reg_we == 1) && (rs == mem_stage_rd || rt == mem_stage_rd)) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		      //$display("stall r mem");
-	      end else if ((writeback_stage_we == 1) && (rs == writeback_stage_rd || rt == writeback_stage_rd)) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		      //$display("stall r wb");
-	      end else if ((regWriteEnable == 1) && (rs == rdIn || rt == rdIn)) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
+              if (opcode == `SW) begin
+                  control[`MEM_WE] <= 0;
+              end
 	      end else begin
-		        stall = 1'b0;
+            stall = 1'b0;
 	      end 
-                   
-          end // case: 6'b000000
-           
-    //I-TYPE
-          6'b001001: begin //ADDIU
-	      if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rt == alu_stage_rd) begin
+    end else if (opcode == `ADDIU || opcode == `SLTI || opcode == `LUI || opcode == `ORI) begin
+          if (should_stall_rt) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rt == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rt == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rt == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else begin
-                  stall = 1'b0;
-              end
-          end
-          6'b001010: begin //SLTI
-              if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rt == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rt == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rt == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0; 
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rt == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else begin
-                  stall = 1'b0;
-              end
-	  end
-          6'b100011: begin //LW
-	      if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rs == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		      control[`MEM_WB] <= 1'b0;                    
-                      control[`MEM_READ] <= 1'b0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rs == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		      control[`MEM_WB] <= 1'b0;                    
-                      control[`MEM_READ] <= 1'b0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rs == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		      control[`MEM_WB] <= 1'b0;                    
-                      control[`MEM_READ] <= 1'b0;
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rs == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		      control[`MEM_WB] <= 1'b0;                    
-                      control[`MEM_READ] <= 1'b0;
-		  end 
-	      end else begin
-                  stall = 1'b0;
-              end
-	  end
-          6'b101011: begin //SW
-              if (alu_stage_reg_we == 1 && stall == 0) begin
-//		  $display("alu_rd: %d, rs: %d, rt: %d", alu_stage_rd, rs, rt);
-		  if (rt == alu_stage_rd || rs == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		      control[`MEM_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rt == mem_stage_rd || rs == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-		      control[`MEM_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-		      control[`MEM_WE] <= 0;
-          end
-		  end else if (regWriteEnable == 1) begin
-          if (rt == rdIn || rs == rdIn) begin
-              stall = 1'b1;
-              irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-	      control[`MEM_WE] <= 0;
-          end 
-	      end else begin
-                  stall = 1'b0;
-              end
-	  end
-          6'b001111: begin //LUI
-              if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rt == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rt == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rt == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end
-		  end else if (regWriteEnable == 1) begin
-          if (rt == rdIn) begin
-              stall = 1'b1;
-              irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end 
-	      end else begin
-                  stall = 1'b0;
-              end
-	  end
-          6'b001101: begin //ORI
-              if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rt == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rt == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rt == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end
-		  end else if (regWriteEnable == 1) begin
-          if (rt == rdIn) begin
-              stall = 1'b1;
-              irOut <= nop_insn;
-              rdOut <= 0;
-              control[`REG_WE] <= 0;
-          end 
 	      end else begin
               stall = 1'b0;
           end
-	  end
-          //J-TYPE
-	  6'b000100: begin //BEQ
-	      if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rs == alu_stage_rd || rt == alu_stage_rd) begin
+    end else if (opcode == `LW || opcode == `BGTZ || 
+        opcode == `BLEZ || opcode == 6'b000001) begin
+          if (should_stall_rs) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
 		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rs == rdIn || rt == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else begin
-		  stall = 1'b0;
-	      end 
-          end
-          6'b000101: begin //BNE
-	      if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rs == alu_stage_rd || rt == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rs == mem_stage_rd || rt == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rs == rdIn || rt == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else begin
-		  stall = 1'b0;
-	      end 
-          end
-          6'b000111: begin //BGTZ
-	         if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rs == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rs == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rs == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rs == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
+              if (opcode == `LW) begin
+                  control[`MEM_WB] <= 1'b0;                    
+                  control[`MEM_READ] <= 1'b0;
+              end
 	      end else begin
                   stall = 1'b0;
-              end
           end
-          6'b000110: begin //BLEZ
-	         if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rs == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rs == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rs == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rs == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else begin
-                  stall = 1'b0;
-              end
-          end // case: 6'b000110
-	  6'b000001: begin //REGIMM instructions
-              if (alu_stage_reg_we == 1 && stall == 0) begin
-		  if (rs == alu_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (mem_stage_reg_we == 1) begin
-		  if (rs == mem_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else if (writeback_stage_we == 1) begin
-		  if (rs == writeback_stage_rd) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end
-	      end else if (regWriteEnable == 1) begin
-		  if (rs == rdIn) begin
-		      stall = 1'b1;
-		      irOut <= nop_insn;
-		      rdOut <= 0;
-		      control[`REG_WE] <= 0;
-		  end 
-	      end else begin
-                  stall = 1'b0;
-              end
-	  end // case: 6'b000001
-          default:
+	  end else
 	    stall = 1'b0;
-        endcase // case (opcode)
-        
-    end
+      end 
     
 endmodule
