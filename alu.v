@@ -69,6 +69,8 @@ module alu (
 	else begin
 	    rdOut <= rdIn;
 	end
+
+	$display("ALU funct: %x rt: %d rt_data: %d rs_data: %d", funct, rt, rtData, rsData);
     end
 	
     always @(posedge clock)

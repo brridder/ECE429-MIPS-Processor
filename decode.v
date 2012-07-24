@@ -70,6 +70,8 @@ module decode (
     wire[0:25] j_address;
     wire[0:15] offset;
 
+    reg [0:31] writeback_data_forward;
+
     
     
   
@@ -120,6 +122,8 @@ module decode (
 //	    irOut <= 32'h0000_0000;
 //	end
 	stalled_insn <= insn;
+	//writeback_data_forward <= writeBackData;
+	$display("wb_data: %d wb_data_f: %d rs_data: %d rt_data: %d", writeBackData, writeback_data_forward, rsData, rtData);
 
     end
 

@@ -221,7 +221,8 @@ module pipeline(
     always @(posedge clock) begin
         if (alu_insn_out[26:31] == `JR && alu_out_data== 31) begin
            program_done <= 1;
-           decode_dump_regs <= 0;
+           decode_dump_regs <= 1;
+	    @(posedge clock);
         end
     end
     
