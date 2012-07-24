@@ -239,13 +239,13 @@ module pipeline(
             instruction_valid = 1'b1;
 	    decode_insn_valid = 1'b1;
             pipeline_stall = 1'b0;
-	    $display("\n\n %x \n", fetch_pc_out);
-	   // $display("decode instruction out: %X", alu_insn_in);
-	   // $display("fetched instruction: %X", fetch_data_out);
-	   // $display("decode stall: %d", decode_stall_out);
-	   // $display("fetch pc out: %X", fetch_pc_out);
-	   // $display("ALU register WE: %d", decode_control[`REG_WE]);
-	   // $display("ALU RD: %d\n\n", decode_rd_out);
+	    $display("\n\n %x ", fetch_pc_out);
+	    $display("decode instruction out: %X", alu_insn_in);
+	    $display("fetched instruction: %X", fetch_data_out);
+	    $display("decode stall: %d", decode_stall_out);
+	    $display("fetch pc out: %X", fetch_pc_out);
+	    $display("ALU register WE: %d", decode_control[`REG_WE]);
+	    $display("ALU RD: %d\n\n", decode_rd_out);
         end
     end
 
