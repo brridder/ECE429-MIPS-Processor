@@ -273,7 +273,7 @@ module decode (
 		      $display("stall r wb");
 		  end
 	      end else if (regWriteEnable == 1) begin
-		  if (rs == writeback_stage_rd || rt == writeback_stage_rd) begin
+		  if (rs == rdIn || rt == rdIn) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
@@ -309,7 +309,7 @@ module decode (
 		      control[`REG_WE] <= 0;
 		  end
 	      end else if (regWriteEnable == 1) begin
-		  if (rt == writeback_stage_rd) begin
+		  if (rt == rdIn) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
@@ -343,7 +343,7 @@ module decode (
 		      control[`REG_WE] <= 0; 
 		  end
 	      end else if (regWriteEnable == 1) begin
-		  if (rt == writeback_stage_rd) begin
+		  if (rt == rdIn) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
@@ -376,7 +376,7 @@ module decode (
 		      control[`REG_WE] <= 0;
 		  end
 	      end else if (regWriteEnable == 1) begin
-		  if (rs == writeback_stage_rd) begin
+		  if (rs == rdIn) begin
 		      stall = 1'b1;
 		      irOut <= nop_insn;
 		      rdOut <= 0;
@@ -413,7 +413,7 @@ module decode (
               control[`REG_WE] <= 0;
           end
 		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd || rs == writeback_stage_rd) begin
+          if (rt == rdIn || rs == rdIn) begin
               stall = 1'b1;
               irOut <= nop_insn;
               rdOut <= 0;
@@ -446,7 +446,7 @@ module decode (
               control[`REG_WE] <= 0;
           end
 		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd) begin
+          if (rt == rdIn) begin
               stall = 1'b1;
               irOut <= nop_insn;
               rdOut <= 0;
@@ -479,7 +479,7 @@ module decode (
               control[`REG_WE] <= 0;
           end
 		  end else if (regWriteEnable == 1) begin
-          if (rt == writeback_stage_rd) begin
+          if (rt == rdIn) begin
               stall = 1'b1;
               irOut <= nop_insn;
               rdOut <= 0;

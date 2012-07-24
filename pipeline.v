@@ -215,7 +215,7 @@ module pipeline(
         @(posedge srec_done)
         decode_dump_regs <= 1;
         @(posedge clock)
-        decode_dump_regs <= 1;
+        decode_dump_regs <= 0;
     end
 
     always @(posedge clock) begin

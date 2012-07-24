@@ -62,6 +62,10 @@ module reg_file (
 	if(rdIn == 0 && regWriteEnable == 1) begin
 	    $display("+============ TRYING TO WRITE TO $ZERO ===========+");
 	end
+
+	if(regWriteEnable == 1) begin
+	    $display("writing: %d to register #: %d", writeBackData, rdIn);
+	end
     end
 
     always @(posedge clock)
